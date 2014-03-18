@@ -97,7 +97,7 @@ class HostBootstrapCommand extends Command
             sprintf('%s -y --force-yes install apache2 nfs-kernel-server curl rpl nmap bind9 git virtualbox', $packageManager),
             sprintf('wget %s -O %s/vagrant.deb', $urlVagrant, $workingDirectory),
             sprintf('dpkg -i %s/vagrant.deb', $workingDirectory),
-            sprintf('rm vagrant.deb'),
+            sprintf('rm %s/vagrant.deb', $workingDirectory),
             'a2enmod proxy_http',
             'service apache2 reload'
         );
