@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+require_once(__DIR__.'/../vendor/autoload.php');
+
+use AramisAuto\Paastrami\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+
+$app = new Application();
+$app->run();

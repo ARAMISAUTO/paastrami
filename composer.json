@@ -1,0 +1,14 @@
+{
+    "require": {
+        "symfony/console": "~2.4",
+        "symfony/filesystem": "~2.4",
+        "symfony/finder": "~2.4",
+        "symfony/process": "~2.4"
+    },
+    "bin": ["bin/platform"],
+    "autoload": {
+        "psr-0": {
+            "AramisAuto\\Paastrami": "src/src"
+        }
+    }
+}
