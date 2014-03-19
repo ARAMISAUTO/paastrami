@@ -21,7 +21,7 @@ class HostBindProxyCommand extends Command
                 'Génération de la configuration Bind '.
                 'et Apache pour environnements des plateformes existantes'
             )
-            ->addArgument('domain', null, InputArgument::REQUIRED, 'Domaine')
+            ->addArgument('domain', null, InputArgument::REQUIRED, 'localhost.localdomain')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
         ;
     }
