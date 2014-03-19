@@ -294,7 +294,7 @@ EOT;
             $output->writeln(
                 sprintf('<info>Génération de la configuration resolvconf</info> - ipHost="%s"', $ipHost)
             );
-            $resolvconf .= "\nnameserver ${ip}\n";
+            $resolvconf .= "\nnameserver ${ipHost}\n";
             file_put_contents('/etc/resolvconf/resolv.conf.d/head', $resolvconf);
             $process = new Process('service resolvconf restart');
             $process->run();
