@@ -197,6 +197,14 @@ class PlatformBuildCommand extends Command
 
     private function addVagrantBox($pathVagrantBox, array $tokens, InputInterface $input, OutputInterface $output)
     {
+        // On vérifie que le fichier est bien lisible
+        if (!is_readable($pathVagrantBox)) {
+            throw new \InvalidArgumentException(
+                sprintf('<info>Impossible de lire le fichier de box Vagrant</info> - file="%s"', $pathVagrantBox)
+            );
+        }
+
+        $output->writeln(sprintf('<info>Ajout de la box à Vagrant</info> - file="%s"', $pathVagrantBox));
         $command = sprintf('vagrant box add -f --name=%s %s', $tokens['box'], $pathVagrantBox);
         $process = new Process($command);
         $process->setTimeout(0);
@@ -206,7 +214,7 @@ class PlatformBuildCommand extends Command
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(
                 sprintf(
-                    'L\'ajout de la box a vagrant a échoué : %s - machine="%s", command="%s"',
+                    'L\'ajout de la box à Vagrant a échoué : %s - machine="%s", command="%s"',
                     $process->getErrorOutput(),
                     $tokens['machine'],
                     $command
