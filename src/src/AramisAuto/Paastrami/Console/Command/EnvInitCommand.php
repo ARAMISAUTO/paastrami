@@ -107,6 +107,9 @@ class EnvInitCommand extends Command
         // Preprocessing des fichiers de l'environnement
         $this->generateDistFiles($dirEnv, $tokens);
 
+        // Placement du Vagrantfile à la racine
+        $fs->copy($dirEnv.'/builders/vagrant/Vagrantfile', $dirEnv.'/Vagrantfile');
+
         // Generate sites list
         // Primary sites
         $output->writeln(
