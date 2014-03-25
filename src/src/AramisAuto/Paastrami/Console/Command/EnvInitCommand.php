@@ -75,10 +75,12 @@ class EnvInitCommand extends Command
         $output->writeln(sprintf('<info>Création de l\'arborescence de fichiers</info> - directory="%s"', $dirEnv));
         $fs->mkdir($dirEnv, 0755);
 
+        // Copie de la plateforme vers le nouvel environnement
+        // TODO : ignore .git, etc
+        $fs->mirror($dirPlatform.'/repository', $dirEnv);
+
         // Copie du Vagrantfile de la platforme
-        $pathVagrantfile = $dirPlatform.'/repository/builders/vagrant/Vagrantfile-dist';
-        $fs->copy($pathVagrantfile, $dirEnv.'/Vagrantfile-dist');
-        $pathVagrantfile = $dirEnv.'/Vagrantfile-dist';
+        $pathVagrantfile = $dirEnv.'/builders/vagrant/Vagrantfile-dist';
 
         // Analyse de la Vagrantfile
         $vagrantfile = Vagrantfile::fromFile($pathVagrantfile);
@@ -146,9 +148,6 @@ class EnvInitCommand extends Command
             $output->writeln(sprintf('* <info>Site à installer</info> - site="%s", branch="%s"', $site, $branch));
             file_put_contents($dirEnv.'/etc/paastrami/sites/'.$site, trim($branch));
         }
-
-        // Generate Salt configuration
-        $this->doSalt($machines, $tokens, $dirPlatform, $dirEnv, $output);
 
         // Création du répertoire hébergeant les sources
         $fs->mkdir($dirEnv.'/'.$input->getOption('sources'));
@@ -233,57 +232,6 @@ class EnvInitCommand extends Command
     {
         $preprocessor = new Preprocessor($tokens, '@', 'paastrami.', '-dist');
         $preprocessor->preprocess($directory);
-    }
-
-    private function doSalt(array $machines, array $mapTokens, $dirPlatform, $dirEnv, OutputInterface $output)
-    {
-        // Génération de la configuration Salt
-        $fs = new Filesystem();
-        $fs->mkdir($dirEnv.'/etc/salt');
-        $output->writeln(
-            sprintf(
-                '<info>Génération de la configuration Salt de l\'environnement</info> - dirSalt="%s"',
-                $dirEnv.'/etc/salt'
-            )
-        );
-        $tplConf = file_get_contents($dirPlatform.'/repository/provisioners/salt/etc/@paastrami.machine@.conf-dist');
-        foreach ($machines as $machine) {
-            $output->writeln(
-                sprintf(
-                    '* <info>Génération du fichier de configuration Salt de la machine virtuelle</info> - machine="%s", file="%s"',
-                    $machine['name'],
-                    sprintf('%s/etc/salt/%s.conf', $dirEnv, $machine['name'])
-                )
-            );
-            $conf = str_replace('@paastrami.machine@', $machine['name'], $tplConf);
-            $conf = str_replace('@paastrami.context@', '', $conf);
-            file_put_contents(sprintf('%s/etc/salt/%s.conf', $dirEnv, $machine['name']), $conf);
-        }
-
-        // Génération des locaux à partir des fichiers -dist
-        $finder = new Finder();
-        $finder->files()->name('*-dist');
-        foreach (array('salt', 'pillar') as $type) {
-            $output->writeln(
-                sprintf(
-                    '* <info>Génération des fichiers Salt locaux</info> - type="%s", source="%s", dest="%s"',
-                    $type,
-                    $dirPlatform.'/repository/provisioners/salt/srv/pillar',
-                    $dirEnv.'/srv/paastrami/pillar'
-                )
-            );
-            $fs->mkdir($dirEnv.'/srv/'.$type);
-            foreach ($finder->in($dirPlatform.'/repository/provisioners/salt/srv/'.$type) as $file) {
-                // Remplacement des tokens
-                $contents = $this->replaceTokens($mapTokens, file_get_contents($file->getRealPath()));
-                $path = explode($dirPlatform.'/repository/provisioners/salt/srv/'.$type, $file->getPath());
-                $pathBase = basename($path[1]);
-                $fs->mkdir($dirEnv.'/srv/'.$type.'/'.$pathBase);
-                $file = $dirEnv.'/srv/'.$type.'/'.$pathBase.'/'.basename($file->getFilename(), '-dist');
-                file_put_contents($file, $contents);
-                $output->writeln(sprintf('** <info>Génération du fichier</info> - file="%s"', $file));
-            }
-        }
     }
 
     private function replaceTokens(array $mapTokens, $contents)
