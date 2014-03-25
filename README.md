@@ -42,6 +42,7 @@ host:bind-proxy - Génération de la configuration Apache / Bind sur l'hôte
 * arrêt d'un environnement       - env:halt
 
 # TODO
+utiliser https://github.com/willdurand/nmap
 réorganiser les file_roots
 plugin redmine pour lancer la création d'environnement
 faire un schéma d'architecture
@@ -103,3 +104,6 @@ Repository
                 - IP
                 - Name
                 - Provisioner
+
+Builder
+    ->build()

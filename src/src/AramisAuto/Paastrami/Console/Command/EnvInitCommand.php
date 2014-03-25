@@ -76,7 +76,7 @@ class EnvInitCommand extends Command
         $fs->mkdir($dirEnv, 0755);
 
         // Copie de la plateforme vers le nouvel environnement
-        // TODO : ignore .git, etc
+        // TODO : ignore .git, etc => en passant un iterator de Finder à fs->mirror()
         $fs->mirror($dirPlatform.'/repository', $dirEnv);
 
         // Copie du Vagrantfile de la platforme

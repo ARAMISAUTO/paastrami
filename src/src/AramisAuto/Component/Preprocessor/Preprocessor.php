@@ -11,9 +11,9 @@ class Preprocessor
     public $prefix;
     public $suffix;
 
-    public function __construct(array $mapTokens, $enclosing = '@', $prefix = '', $suffix = '-dist')
+    public function __construct(array $data, $prefix = '', $enclosing = '@', $separator = '.', $suffix = '-dist')
     {
-        $this->mapTokens = $mapTokens;
+        $this->mapTokens = $data;
         $this->enclosing = $enclosing;
         $this->prefix = $prefix;
         $this->suffix = $suffix;
@@ -24,6 +24,9 @@ class Preprocessor
         // Find files that will be preprocessed
         $finder = new Finder();
         $files = $finder->files()->name('*'.$this->suffix)->in($directory);
+
+        // Store rendered files
+        $rendered = array();
 
         // Preprocess files
         foreach ($files as $file) {
@@ -37,13 +40,17 @@ class Preprocessor
                 basename($this->replaceTokens($file->getFilename()), $this->suffix)
             );
             file_put_contents($pathRendered, $this->replaceTokens(file_get_contents($pathOrig)));
+
+            // Add to store
+            $rendered[] = array($pathOrig, $pathRendered);
         }
+
+        return $rendered;
     }
 
     public function replaceTokens($contents)
     {
-        foreach ($this->mapTokens as $token => $replacement)
-        {
+        foreach ($this->mapTokens as $token => $replacement) {
             $contents = str_replace(
                 sprintf('%s%s%s%s', $this->enclosing, $this->prefix, $token, $this->enclosing),
                 $replacement,
