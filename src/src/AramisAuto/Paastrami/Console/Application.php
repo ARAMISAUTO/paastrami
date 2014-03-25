@@ -5,6 +5,7 @@ use AramisAuto\Paastrami\Console\Command\EnvInitCommand;
 use AramisAuto\Paastrami\Console\Command\HostApacheCommand;
 use AramisAuto\Paastrami\Console\Command\HostBindProxyCommand;
 use AramisAuto\Paastrami\Console\Command\HostBootstrapCommand;
+use AramisAuto\Paastrami\Console\Command\PlatformBuildCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformInitCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformPullCommand;
 
@@ -24,6 +25,7 @@ class Application extends \Symfony\Component\Console\Application
         $commands[] = new HostBindProxyCommand();
 
         // platform:*
+        $commands[] = new PlatformBuildCommand();
         $commands[] = new PlatformInitCommand();
         $commands[] = new PlatformPullCommand();
 

@@ -40,7 +40,7 @@ class PlatformInitCommand extends Command
         if (is_dir($dirPlatform)) {
             throw new \RuntimeException(
                 sprintf(
-                    'La plateforme existe déjà platform="%s" directory="%s"',
+                    'La plateforme existe déjà - platform="%s" directory="%s"',
                     $input->getArgument('name'),
                     $dirPlatform
                 )
@@ -69,24 +69,28 @@ class PlatformInitCommand extends Command
                 $input->getArgument('name')
             )
         );
-        $process->run(function ($type, $buffer) {
-            echo $buffer;
-        });
+        $process->run();
         if (!$process->isSuccessful()) {
             $fs->remove($dirPlatform);
             throw new \RuntimeException($process->getErrorOutput());
         } else {
-            // Log
-            $output->writeln(
-                sprintf('<info>La plateforme a bien été créée</info> - platform="%s"', $input->getArgument('name'))
-            );
-            $output->writeln(
-                sprintf(
-                    '<comment>Pour créer un environnement sur cette plateforme : paastrami env:init --working-directory=%s %s NAME SITES1 ... [SITESN]</comment>',
-                    $input->getOption('working-directory'),
-                    $input->getArgument('name')
-                )
-            );
+            $output->write($process->getOutput());
         }
+
+        // TODO : Génération des images des machines virtuelles
+
+        // Log
+        $output->writeln(
+            sprintf('<info>La plateforme a bien été créée</info> - platform="%s"', $input->getArgument('name'))
+        );
+
+        // Aide pour la suite
+        $output->writeln(
+            sprintf(
+                '<comment>Pour créer un environnement sur cette plateforme : paastrami env:init --working-directory=%s %s NAME SITES1 ... [SITESN]</comment>',
+                $input->getOption('working-directory'),
+                $input->getArgument('name')
+            )
+        );
     }
 }

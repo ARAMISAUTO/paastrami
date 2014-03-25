@@ -8,7 +8,8 @@
     "bin": ["bin/platform"],
     "autoload": {
         "psr-0": {
-            "AramisAuto\\Paastrami": "src/src"
+            "AramisAuto\\Paastrami": "src/src",
+            "AramisAuto\\Component": "src/src"
         }
     }
 }
