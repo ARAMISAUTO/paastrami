@@ -18,7 +18,7 @@ platform:build - Création des images
 
 ## Création d'un environnement
 
-Un environnement va avoir pour nom l'identifiant du ticket sur lequel on veut travailler. eg. 1161 pour http://redmine.it.aramisauto.com/issues/1161
+Un environnement va avoir pour nom l'identifiant du ticket sur lequel on veut travailler. eg. 1161 pour http://redmine.xxx/issues/1161
 
 env:init - Création de l'environnement, récupération des sources des applications, configuration
 host:bind-proxy - Génération de la configuration Apache / Bind sur l'hôte
