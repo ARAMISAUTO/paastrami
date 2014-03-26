@@ -3,6 +3,8 @@
 namespace AramisAuto\Paastrami\Console\Command;
 
 use AramisAuto\Component\Preprocessor\Preprocessor;
+use AramisAuto\Paastrami\Entity\Environment;
+use AramisAuto\Paastrami\Entity\Platform;
 use AramisAuto\Paastrami\Entity\Vagrantfile;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,6 +37,15 @@ class EnvInitCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $environment = new Environment(
+            $input->getArgument('environment'),
+            new Platform($input->getArgument('platform'), $input->getOption('working-directory'))
+        );
+
+        $environment->init($input->getOption('ip-range'), $input->getArgument('sites'));
+
+        exit;
+
         // Log
         $output->writeln(
             sprintf(

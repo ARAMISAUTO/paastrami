@@ -26,7 +26,7 @@ class PlatformBuildCommand extends Command
         // Instanciate platform
         $platform = new Platform(
             $input->getArgument('platform'),
-            sprintf('%s/platforms/%s', $input->getOption('working-directory'), $input->getArgument('platform'))
+            $input->getOption('working-directory')
         );
 
         // Build platform

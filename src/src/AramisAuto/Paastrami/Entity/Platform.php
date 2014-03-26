@@ -17,7 +17,7 @@ class Platform
     public function __construct($name, $directory)
     {
         $this->name = $name;
-        $this->directory = $directory;
+        $this->directory = sprintf('%s/platforms/%s', $directory, $this->name);
         $this->initialize();
     }
 
@@ -25,7 +25,7 @@ class Platform
     {
         // Search for initial Vagrantfile to get list of machines
         $vagrantfile = Vagrantfile::fromFile(
-            sprintf('%s/repository/builders/vagrant/Vagrantfile-dist', $this->directory)
+            sprintf('%s/builders/vagrant/Vagrantfile-dist', $this->getRepository())
         );
         $machines = $vagrantfile->getData()['machines'];
         $this->firstMachine = $machines[0]['name'];
@@ -37,20 +37,27 @@ class Platform
     private function preprocess(array $data)
     {
         $preprocessor = new Preprocessor($data, 'paastrami.');
-        $preprocessor->preprocess($this->directory.'/repository');
+        $preprocessor->preprocess($this->getRepository());
     }
 
     public function build()
     {
         foreach ($this->getMachines() as $machine) {
+            // Generate data used for preprocessing
             $data = $this->getPreprocessingData($machine);
+
+            // Preprocess platform's repository files
             $this->preprocess($data);
+
+            // Build box for machine
             $pathBox = $this->buildBox($data);
+
+            // Add box to Vagrant
             $this->addBox($data['box'], $pathBox);
         }
     }
 
-    private function addBoxToVagrant($name, $path)
+    private function addBox($name, $path)
     {
         // Generate command
         $command = sprintf('vagrant box add -f --name=%s %s', $name, $path);
@@ -66,7 +73,7 @@ class Platform
     private function buildBox(array $data)
     {
         // Generate Packer command
-        $command = sprintf('packer build %s/repository/builders/packer/%s.json', $this->directory, $data['box']);
+        $command = sprintf('packer build %s/builders/packer/%s.json', $this->getRepository(), $data['box']);
 
         // Execute command
         $process = new Process($command);
@@ -86,13 +93,13 @@ class Platform
         return $matches[1];
     }
 
-    protected function getPreprocessingData(array $machine)
+    public function getPreprocessingData(array $machine)
     {
         $data = array(
             'box'        => $machine['box'],
             'machine'    => $machine['name'],
             'platform'   => $this->name,
-            'repository' => realpath($this->directory.'/repository'),
+            'repository' => realpath($this->getRepository()),
         );
         foreach ($this->getMachines() as $name => $spec) {
             $data[sprintf('machines.%s.box', $name)] = $spec['box'];
@@ -109,5 +116,15 @@ class Platform
     public function getMachines()
     {
         return $this->machines;
+    }
+
+    public function getDirectory()
+    {
+        return $this->directory;
+    }
+
+    public function getRepository()
+    {
+        return $this->getDirectory().'/repository';
     }
 }
