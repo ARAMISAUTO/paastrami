@@ -10,15 +10,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EnvHaltCommand extends Command
+class EnvDestroyCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('env:halt')
-            ->setDescription("Stops environment boxes")
+            ->setName('env:destroy')
+            ->setDescription("Deletes the environment")
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
-            ->addOption('force', null, InputOption::VALUE_NONE, 'Force shut down (equivalent of pulling power)')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addArgument('environment', InputArgument::REQUIRED, 'Environment name');
     }
@@ -31,7 +30,7 @@ class EnvHaltCommand extends Command
             new Platform($input->getArgument('platform'), $input->getOption('working-directory'))
         );
 
-        // Halt environment
-        $environment->halt($input->getOption('force'));
+        // Destroy environment
+        $environment->destroy();
     }
 }

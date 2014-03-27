@@ -101,6 +101,25 @@ class Environment
         });
     }
 
+    public function destroy()
+    {
+        // Utils
+        $fs = new Filesystem();
+
+        // Generate Vagrant command
+        $command = 'vagrant destroy --force';
+
+        // Execute command
+        $process = new Process($command, $this->getDirectory());
+        $process->setTimeout(0);
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+        });
+
+        // Delete directory
+        $fs->remove($this->getDirectory());
+    }
+
     private function preprocess(array $data)
     {
         $preprocessor = new Preprocessor($data, 'paastrami.');
