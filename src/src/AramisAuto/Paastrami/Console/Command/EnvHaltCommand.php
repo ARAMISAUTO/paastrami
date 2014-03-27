@@ -10,16 +10,17 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class EnvInitCommand extends Command
+class EnvHaltCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('env:init')
-            ->setDescription("Creates environment directory structure and copies files from platform")
-            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
-            ->addArgument('platform', InputArgument::REQUIRED, 'Nom de la plateforme')
-            ->addArgument('environment', InputArgument::REQUIRED, "Nom de l'environnement");
+            ->setName('env:halt')
+            ->setDescription("Stops environment boxes")
+            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Force shut down (equivalent of pulling power)')
+            ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
+            ->addArgument('environment', InputArgument::REQUIRED, 'Environment name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,6 +32,6 @@ class EnvInitCommand extends Command
         );
 
         // Initialize environment
-        $environment->init();
+        $environment->halt();
     }
 }

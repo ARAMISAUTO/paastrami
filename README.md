@@ -64,6 +64,7 @@ homepage plateforme
 homepage environnement
 Permettre de rendre les box générées accessibles en HTTP pour la récupération en Vagrantfile
 avoir un sls de build dédié à la plateforme, include par le sls de build d'environnement (éviter opérations ES par exemple)
+voir ce qu'on peut faire avec Vagrant Cloud
 
 fix BUILD FAILED
 /var/www/v5/build.xml:4: Cannot find /var/www/v5/vendor/constructions-incongrues/ananas-build-toolkit/modules/toolkit/module.xml imported from /var/www/v5/build.xml

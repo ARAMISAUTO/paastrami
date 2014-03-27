@@ -1,7 +1,9 @@
 <?php
 namespace AramisAuto\Paastrami\Console;
 
+use AramisAuto\Paastrami\Console\Command\EnvHaltCommand;
 use AramisAuto\Paastrami\Console\Command\EnvInitCommand;
+use AramisAuto\Paastrami\Console\Command\EnvUpCommand;
 use AramisAuto\Paastrami\Console\Command\HostApacheCommand;
 use AramisAuto\Paastrami\Console\Command\HostBindProxyCommand;
 use AramisAuto\Paastrami\Console\Command\HostBootstrapCommand;
@@ -31,6 +33,8 @@ class Application extends \Symfony\Component\Console\Application
 
         // env:*
         $commands[] = new EnvInitCommand();
+        $commands[] = new EnvUpCommand();
+        $commands[] = new EnvHaltCommand();
 
         return $commands;
     }

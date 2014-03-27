@@ -20,7 +20,7 @@ class Environment
         $this->directory = sprintf('%s/environments/%s', $this->platform->getDirectory(), $this->name);
     }
 
-    public function init($ipRange, $sites)
+    public function init()
     {
         // Utils
         $fs = new Filesystem();
@@ -36,6 +36,12 @@ class Environment
             $finder->notName('.git')->followLinks()->in($this->platform->getRepository()),
             array('delete' => false)
         );
+    }
+
+    public function build($ipRange, array $sites = null, $dirSources = null)
+    {
+        // Utils
+        $fs = new Filesystem();
 
         // Find available IPs for machines
         $ips = $this->findAvailableIps(count($this->platform->getMachines()), $ipRange);
@@ -51,12 +57,95 @@ class Environment
 
             $i++;
         }
+
+        // Generate sites list
+        if (!is_null($sites)) {
+            $this->generateSitesList($sites);
+        }
+
+        // Create sources directory
+        if (!is_null($dirSources)) {
+            $fs->mkdir($this->getDirectory().'/'.$dirSources);
+        }
+    }
+
+    public function up($provision = false)
+    {
+        // Generate Vagrant command
+        $command = 'vagrant up --parallel';
+        if (true === $provision) {
+            $command .= ' --provision';
+        }
+
+        // Execute command
+        $process = new Process($command, $this->getDirectory());
+        $process->setTimeout(0);
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+        });
+    }
+
+    public function halt($force = false)
+    {
+        // Generate Vagrant command
+        $command = 'vagrant halt';
+        if (true === $force) {
+            $command .= ' --force';
+        }
+
+        // Execute command
+        $process = new Process($command, $this->getDirectory());
+        $process->setTimeout(0);
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+        });
     }
 
     private function preprocess(array $data)
     {
         $preprocessor = new Preprocessor($data, 'paastrami.');
         $preprocessor->preprocess($this->getDirectory());
+    }
+
+    private function generateSitesList(array $sites)
+    {
+        // Utils
+        $fs = new Filesystem();
+
+        $mapSites = array();
+        foreach ($sites as $siteDef) {
+            $siteParts = explode(':', $siteDef);
+            $mapSites[$siteParts[0]] = 'master';
+            if (isset($siteParts[1])) {
+                $mapSites[$siteParts[0]] = $siteParts[1];
+            }
+        }
+
+        // Dependencies
+        foreach ($mapSites as $site => $branch) {
+            if (file_exists($this->platform->getRepository().'/etc/paastrami/sites/'.$site)) {
+                $dependencies = file($this->platform->getRepository().'/etc/paastrami/sites/'.$site);
+                foreach ($dependencies as $dependency) {
+                    $dependencyParts = explode(':', $dependency);
+                    $dependencySite = trim($dependencyParts[0]);
+                    if (!isset($mapSites[$dependencySite])) {
+                        $mapSites[$dependencySite] = 'master';
+                        if (isset($dependencyParts[1])) {
+                            $mapSites[$dependencySite] = $dependencyParts[1];
+                        }
+                    }
+                }
+            }
+        }
+
+        // Write sites
+        $fs->remove($this->getDirectory().'/etc/paastrami/sites');
+        $fs->mkdir($this->getDirectory().'/etc/paastrami/sites', 0755);
+        foreach ($mapSites as $site => $branch) {
+            file_put_contents($this->getDirectory().'/etc/paastrami/sites/'.$site, trim($branch));
+        }
+
+        return $mapSites;
     }
 
     private function findAvailableIps($count, $ipRange)
@@ -86,7 +175,11 @@ class Environment
 
     public function getPreprocessingData(array $machine, $ip, array $ips)
     {
+        // Get platform related data
         $data = $this->platform->getPreprocessingData($machine);
+
+        // Add environment data
+        $data['environment'] = $this->name;
         $data['ip'] = $ip;
 
         $i = 0;
