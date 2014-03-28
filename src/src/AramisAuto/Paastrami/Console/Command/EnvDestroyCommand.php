@@ -30,6 +30,9 @@ class EnvDestroyCommand extends Command
             new Platform($input->getArgument('platform'), $input->getOption('working-directory'))
         );
 
+        // Halt environment
+        $environment->halt();
+
         // Destroy environment
         $environment->destroy();
     }
