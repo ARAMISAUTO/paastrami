@@ -24,6 +24,7 @@ class HostBindProxyCommand extends Command
             )
             ->addArgument('domain', null, InputArgument::REQUIRED)
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
+            ->addOption('restart-services', null, InputOption::VALUE_NONE, 'Restart impacted services on host')
         ;
     }
 
@@ -63,6 +64,8 @@ class HostBindProxyCommand extends Command
             $platform = new Platform($specEnvironment['platform'], $input->getOption('working-directory'));
             $this->doBindCleanup($input->getArgument('domain'), $platform->getName(), $output);
             $this->doApacheCleanup($input->getArgument('domain'), $platform->getName(), $output);
+
+            break;
         }
 
         foreach ($filesPaastrami as $file) {
@@ -97,29 +100,33 @@ class HostBindProxyCommand extends Command
                 $specEnvironment['ip'],
                 $output
             );
+
+            break;
         }
 
         // Génération de la configuration resolv.conf
         $this->doResolvconf($ipHost, $output);
 
-        // Redémarrage de Bind
-        $output->writeln('<info>Redémarrage de Bind</info>');
-        $process = new Process('service bind9 restart');
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException('Le redémarrage de Bind a échoué : ' . $process->getErrorOutput());
-        } else {
-            $output->writeln($process->getOutput());
-        }
+        if (!$input->getOption('restart-services')) {
+            // Redémarrage de Bind
+            $output->writeln('<info>Redémarrage de Bind</info>');
+            $process = new Process('service bind9 restart');
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new \RuntimeException('Le redémarrage de Bind a échoué : ' . $process->getErrorOutput());
+            } else {
+                $output->writeln($process->getOutput());
+            }
 
-        // Redémarrage de Apache
-        $output->writeln('<info>Redémarrage de Apache</info>');
-        $process = new Process('service apache2 restart');
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        } else {
-            $output->writeln($process->getOutput());
+            // Redémarrage de Apache
+            $output->writeln('<info>Redémarrage de Apache</info>');
+            $process = new Process('service apache2 restart');
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new \RuntimeException($process->getErrorOutput());
+            } else {
+                $output->writeln($process->getOutput());
+            }
         }
     }
 
