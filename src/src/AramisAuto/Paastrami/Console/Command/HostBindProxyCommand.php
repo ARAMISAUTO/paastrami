@@ -107,7 +107,7 @@ class HostBindProxyCommand extends Command
         // Génération de la configuration resolv.conf
         $this->doResolvconf($ipHost, $output);
 
-        if (!$input->getOption('restart-services')) {
+        if ($input->getOption('restart-services')) {
             // Redémarrage de Bind
             $output->writeln('<info>Redémarrage de Bind</info>');
             $process = new Process('service bind9 restart');
@@ -244,7 +244,7 @@ EOT;
             $conf
         );
 
-        $commands = array('a2ensite '.sprintf('%s.%s.%s', $environment, $platform, $domain), 'service apache2 restart');
+        $commands = array('a2ensite '.sprintf('%s.%s.%s', $environment, $platform, $domain));
         foreach ($commands as $command) {
             $process = new Process($command);
             $process->run();
