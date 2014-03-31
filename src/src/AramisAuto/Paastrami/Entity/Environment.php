@@ -206,7 +206,7 @@ class Environment
         // Add environment data
         $data['environment'] = $this->name;
         $data['ip'] = $ip;
-        $data['sites'] = '"'.implode('","', $sites).'"';
+        $data['sites'] = '"'.implode('","', array_keys($sites)).'"';
 
         $i = 0;
         foreach ($this->platform->getMachines() as $machine) {
