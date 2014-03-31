@@ -2,6 +2,7 @@
 
 namespace AramisAuto\Paastrami\Console\Command;
 
+use AramisAuto\Paastrami\Entity\Platform;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
