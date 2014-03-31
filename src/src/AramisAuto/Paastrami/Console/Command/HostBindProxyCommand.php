@@ -64,8 +64,6 @@ class HostBindProxyCommand extends Command
             $platform = new Platform($specEnvironment['platform'], $input->getOption('working-directory'));
             $this->doBindCleanup($input->getArgument('domain'), $platform->getName(), $output);
             $this->doApacheCleanup($input->getArgument('domain'), $platform->getName(), $output);
-
-            break;
         }
 
         foreach ($filesPaastrami as $file) {
@@ -86,7 +84,7 @@ class HostBindProxyCommand extends Command
                 $specEnvironment['environment'],
                 $specEnvironment['platform'],
                 $input->getArgument('domain'),
-                array_keys($specEnvironment['sites']),
+                $specEnvironment['sites'],
                 $ipHost,
                 $serial,
                 $output
@@ -100,8 +98,6 @@ class HostBindProxyCommand extends Command
                 $specEnvironment['ip'],
                 $output
             );
-
-            break;
         }
 
         // Génération de la configuration resolv.conf
