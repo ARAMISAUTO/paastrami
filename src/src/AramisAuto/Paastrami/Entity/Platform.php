@@ -108,6 +108,25 @@ class Platform
         return $data;
     }
 
+    public function getEnvironments()
+    {
+        // Find environments directories
+        $finder = new Finder();
+        $environments = array();
+        $dirs = $finder
+            ->directories()
+            ->depth('< 1')
+            ->sortByName()
+            ->in($this->getDirectory().'/environments');
+
+        // Instanciate environments
+        foreach ($dirs as $dir) {
+            $environments[] = new Environment($dir->getFilename(), $this);
+        }
+
+        return $environments;
+    }
+
     public function setMachine($name, array $data)
     {
         $this->machines[$name] = $data;
@@ -126,5 +145,10 @@ class Platform
     public function getRepository()
     {
         return $this->getDirectory().'/repository';
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }

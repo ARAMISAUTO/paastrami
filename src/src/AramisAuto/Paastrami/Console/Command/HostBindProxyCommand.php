@@ -32,12 +32,12 @@ class HostBindProxyCommand extends Command
         $finder = new Finder();
         $filesPaastrami = $finder
             ->files()
-            ->name('paastrami.json')
+            ->name('*.json')
             ->in($input->getOption('working-directory').'/platforms/*/environments/*/etc');
         if (!$filesPaastrami->count()) {
             throw new \RuntimeException(
                 sprintf(
-                    'Aucun fichier paastrami.json n\'a été trouvé - working-directory="%s"',
+                    'Aucun fichier *.json n\'a été trouvé - working-directory="%s"',
                     $input->getOption('working-directory')
                 )
             );
@@ -57,30 +57,15 @@ class HostBindProxyCommand extends Command
             )
         );
 
-        // Suppression de la configuration existante des plateformes
-        $platforms = array();
         foreach ($filesPaastrami as $file) {
-            $platforms[] = basename(dirname(dirname(dirname(dirname(dirname($file->getPathname()))))));
-        }
-        $platforms = array_unique($platforms);
-        foreach ($platforms as $platform) {
-            $this->doBindCleanup($input->getArgument('domain'), $platform, $output);
-            $this->doApacheCleanup($input->getArgument('domain'), $platform, $output);
+            $specEnvironment = json_decode(file_get_contents((string)$file), true);
+            $platform = new Platform($specEnvironment['platform'], $input->getOption('working-directory'));
+            $this->doBindCleanup($input->getArgument('domain'), $platform->getName(), $output);
+            $this->doApacheCleanup($input->getArgument('domain'), $platform->getName(), $output);
         }
 
-        // Génération des configurations pour chaque environnement
         foreach ($filesPaastrami as $file) {
-            // Lecture de la spécification de l'environnement
-            $specEnvironment = json_decode(file_get_contents($file->getPathname()), true);
-            if (false == $specEnvironment) {
-                $output->writeln(
-                    sprintf(
-                        '<error>Le fichier paastrami.json ne peut pas être lu et est ignoré</error> - file="%s"',
-                        $file->getPathname()
-                    )
-                );
-                continue;
-            }
+            $specEnvironment = json_decode(file_get_contents((string)$file), true);
 
             // Récupération du serial DNS avant suppression du fichier db
             $serial = $this->getDnsDbSerial(
@@ -88,13 +73,13 @@ class HostBindProxyCommand extends Command
                     '/etc/bind/db.%s.%s.%s',
                     $input->getArgument('domain'),
                     $specEnvironment['platform'],
-                    $specEnvironment['name']
+                    $specEnvironment['environment']
                 )
             );
 
             // Génération de la configuration Bind de l'environnement
             $this->doBindGenerate(
-                $specEnvironment['name'],
+                $specEnvironment['environment'],
                 $specEnvironment['platform'],
                 $input->getArgument('domain'),
                 array_keys($specEnvironment['sites']),
@@ -105,10 +90,10 @@ class HostBindProxyCommand extends Command
 
             // Génération de la configuration Apache
             $this->doApacheGenerate(
-                $specEnvironment['name'],
+                $specEnvironment['environment'],
                 $specEnvironment['platform'],
                 $input->getArgument('domain'),
-                $specEnvironment['vms'][0]['ip'],
+                $specEnvironment['ip'],
                 $output
             );
         }

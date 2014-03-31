@@ -10,6 +10,12 @@ use Symfony\Component\Process\Process;
 
 class Environment
 {
+    const STATUS_HALTED = 1;
+    const STATUS_MIXED = 2;
+    const STATUS_NEW = 3;
+    const STATUS_UNKNOWN = 4;
+    const STATUS_UP = 5;
+
     private $name;
     private $platform;
 
@@ -213,5 +219,55 @@ class Environment
     public function getDirectory()
     {
         return $this->directory;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getPlatform()
+    {
+        return $this->platform;
+    }
+
+    public function getStatus()
+    {
+        $statuses = array();
+        foreach ($this->getPlatform()->getMachines() as $machine) {
+            // Execute vagrant command
+            $process = new Process('vagrant status '.$machine['name'], $this->getDirectory());
+            $process->run();
+
+            // Parse output
+            $matches = array();
+            $found = preg_match(sprintf('/%s +(\w+)/', $machine['name']), $process->getOutput(), $matches);
+            if (!$found) {
+                $statuses[] = self::STATUS_UNKNOWN;
+            } elseif ($matches[1] == 'poweroff') {
+                $statuses[] = self::STATUS_HALTED;
+            } elseif ($matches[1] == 'running') {
+                $statuses[] = self::STATUS_UP;
+            }
+        }
+
+        $status = array_unique($statuses);
+        if (count($status) === 1) {
+            $status = $status[0];
+        } else {
+            $status = self::STATUS_MIXED;
+        }
+
+        return $status;
+    }
+
+    public function getStatusText($status)
+    {
+        $texts = array(1 => 'halted', 2 => 'mixed', 3 => 'new', 4 => 'unknown', 5 => 'up');
+        if (!isset($texts[$status])) {
+            $status = 3;
+        }
+
+        return $texts[$status];
     }
 }

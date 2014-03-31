@@ -4,12 +4,14 @@ namespace AramisAuto\Paastrami\Console;
 use AramisAuto\Paastrami\Console\Command\EnvDestroyCommand;
 use AramisAuto\Paastrami\Console\Command\EnvHaltCommand;
 use AramisAuto\Paastrami\Console\Command\EnvInitCommand;
+use AramisAuto\Paastrami\Console\Command\EnvListCommand;
 use AramisAuto\Paastrami\Console\Command\EnvUpCommand;
 use AramisAuto\Paastrami\Console\Command\HostApacheCommand;
 use AramisAuto\Paastrami\Console\Command\HostBindProxyCommand;
 use AramisAuto\Paastrami\Console\Command\HostBootstrapCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformBuildCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformInitCommand;
+use AramisAuto\Paastrami\Console\Command\PlatformListCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformPullCommand;
 
 class Application extends \Symfony\Component\Console\Application
@@ -30,12 +32,14 @@ class Application extends \Symfony\Component\Console\Application
         // platform:*
         $commands[] = new PlatformBuildCommand();
         $commands[] = new PlatformInitCommand();
+        $commands[] = new PlatformListCommand();
         $commands[] = new PlatformPullCommand();
 
         // env:*
         $commands[] = new EnvDestroyCommand();
         $commands[] = new EnvHaltCommand();
         $commands[] = new EnvInitCommand();
+        $commands[] = new EnvListCommand();
         $commands[] = new EnvUpCommand();
 
         return $commands;

@@ -67,8 +67,7 @@ avoir un sls de build dédié à la plateforme, include par le sls de build d'en
 voir ce qu'on peut faire avec Vagrant Cloud
 trop SIGINT pour éteindre correctement les VM
 passer ABT en install --prefer-dist
-http://jugnu-life.blogspot.com/2013/07/a-virtualbox-machine-with-name-already.html
-
+utiliser Twig pour le rendering
 
 fix BUILD FAILED
 /var/www/v5/build.xml:4: Cannot find /var/www/v5/vendor/constructions-incongrues/ananas-build-toolkit/modules/toolkit/module.xml imported from /var/www/v5/build.xml

@@ -16,7 +16,7 @@ class PlatformBuildCommand extends Command
         $this
             ->setName('platform:build')
             ->setDescription("Génération des images de la plateforme")
-            ->addArgument('platform', InputArgument::REQUIRED, 'Nom de la plateforme')
+            ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
         ;
     }
