@@ -52,21 +52,21 @@ class Environment
         // Find available IPs for machines
         $ips = $this->findAvailableIps(count($this->platform->getMachines()), $ipRange);
 
+        // Generate sites list
+        if (!is_null($sites)) {
+            $sites = $this->generateSitesList($sites);
+        }
+
         // Preprocess environment
         $i = 0;
         foreach ($this->platform->getMachines() as $machine) {
             // Generate preprocessing data
-            $data = $this->getPreprocessingData($machine, $ips[$i], $ips);
+            $data = $this->getPreprocessingData($machine, $ips[$i], $ips, $sites);
 
             // Preprocess environment files
             $this->preprocess($data);
 
             $i++;
-        }
-
-        // Generate sites list
-        if (!is_null($sites)) {
-            $this->generateSitesList($sites);
         }
 
         // Create sources directory
@@ -198,7 +198,7 @@ class Environment
         return array_slice($matches[1], 0, $count);
     }
 
-    public function getPreprocessingData(array $machine, $ip, array $ips)
+    public function getPreprocessingData(array $machine, $ip, array $ips, array $sites = null)
     {
         // Get platform related data
         $data = $this->platform->getPreprocessingData($machine);
@@ -206,6 +206,7 @@ class Environment
         // Add environment data
         $data['environment'] = $this->name;
         $data['ip'] = $ip;
+        $data['sites'] = '"'.implode('","', $sites).'"';
 
         $i = 0;
         foreach ($this->platform->getMachines() as $machine) {
