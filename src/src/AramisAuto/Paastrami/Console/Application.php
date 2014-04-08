@@ -5,6 +5,7 @@ use AramisAuto\Paastrami\Console\Command\EnvDestroyCommand;
 use AramisAuto\Paastrami\Console\Command\EnvHaltCommand;
 use AramisAuto\Paastrami\Console\Command\EnvInitCommand;
 use AramisAuto\Paastrami\Console\Command\EnvListCommand;
+use AramisAuto\Paastrami\Console\Command\EnvSshCommand;
 use AramisAuto\Paastrami\Console\Command\EnvUpCommand;
 use AramisAuto\Paastrami\Console\Command\HostApacheCommand;
 use AramisAuto\Paastrami\Console\Command\HostBindProxyCommand;
@@ -41,6 +42,7 @@ class Application extends \Symfony\Component\Console\Application
         $commands[] = new EnvInitCommand();
         $commands[] = new EnvListCommand();
         $commands[] = new EnvUpCommand();
+        $commands[] = new EnvSshCommand();
 
         return $commands;
     }

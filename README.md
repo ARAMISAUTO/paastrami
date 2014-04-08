@@ -42,22 +42,16 @@ host:bind-proxy - Génération de la configuration Apache / Bind sur l'hôte
 * arrêt d'un environnement       - env:halt
 
 # TODO
-utiliser https://github.com/willdurand/nmap
 réorganiser les file_roots
 plugin redmine pour lancer la création d'environnement
-faire un schéma d'architecture
 apt proxy sur le serveur de dev (via boostrap ?)
 bootstrap du host avec Salt
 homepage data :
  * phpmyadmin
  * rabbitmq management [x]
  * es HQ [x]
-unbind-proxy
-<site>.<env>.<platform>.platforms.aramisauto.com
-    v5.env1.main.platforms.aramisauto.com
 Génération des tâches rundeck à partir des tâches symfony
 api qui liste les plateformes et les environnements
-suppression des environnements
 phar
 documentation pépite
 homepage plateforme
@@ -68,48 +62,18 @@ voir ce qu'on peut faire avec Vagrant Cloud
 trop SIGINT pour éteindre correctement les VM
 passer ABT en install --prefer-dist
 utiliser Twig pour le rendering
-
-fix BUILD FAILED
-/var/www/v5/build.xml:4: Cannot find /var/www/v5/vendor/constructions-incongrues/ananas-build-toolkit/modules/toolkit/module.xml imported from /var/www/v5/build.xml
-because :
-                    [exec]   [Symfony\Component\Process\Exception\ProcessTimedOutException]
-                       [exec]   The process "git clone 'git@github.com:ARAMISAUTO/v5MediaAssets.git' '/var/www/v5/vendor/aramisauto/v5MediaAssets' && cd '/var/www/v5/vendor/aramisauto/v5MediaAssets' && git remote add composer 'git@github.com:ARAMISAUTO/v5MediaAssets.git' && git fetch composer" exceeded the timeout of 300 seconds.
-                       [exec]
-start    : 14h34
-end      : 14h55
-duration : 21m
+installer Mailcatcher ?
+.deb qui package le tout !
+Permettre l'accès au log et en SSH aux environnements
+Passer tout en anglais
+Rajouter la liste des sites installés à env:list
+env:reload
+env:urls ?
+env:ssh <platform> <env> <machine>
+logs avec splunk
 
 # Amélioration des performances
 
 Mirroirs des dépôts Github
 Mirroir APT
 VM préprovisionnées avec Packer
-
-# Entities
-
-Entity\Vagrantfile
-    ::fromFile($path)
-    ::__construct($contents)
-    ->getMachines() : []
-
-Repository
-    ::fromFilesystem($path)
-    - Path
-    - Platforms
-        - Platform
-        - Environments
-            - Environment
-                - Name
-                - Path
-        - Machines
-            - Machine
-                - Box
-                - Builder
-                - IP
-                - Name
-                - Provisioner
-
-Builder
-    ->build()
-
-$environment = new Environment($name, new Platform($dir));
