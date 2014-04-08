@@ -36,6 +36,6 @@ class EnvSshCommand extends Command
 
         // Execute command
         chdir($environment->getDirectory());
-        system($command);
+        passthru($command);
     }
 }
