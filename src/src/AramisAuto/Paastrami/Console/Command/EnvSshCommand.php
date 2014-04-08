@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 class EnvSshCommand extends Command
 {
@@ -19,7 +20,7 @@ class EnvSshCommand extends Command
             ->setDescription("Connects to a machine via SSH")
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
-            ->addArgument('environment', InputArgument::REQUIRED, 'Environment name');
+            ->addArgument('environment', InputArgument::REQUIRED, 'Environment name')
             ->addArgument('machine', InputArgument::REQUIRED, 'Machine name');
     }
 
