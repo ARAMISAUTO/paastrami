@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
 class EnvSshCommand extends Command
 {
@@ -36,6 +35,7 @@ class EnvSshCommand extends Command
         $command = sprintf('vagrant ssh %s', $input->getArgument('machine'));
 
         // Execute command
-        $process = new Process($command, $environment->getDirectory());
+        chdir($environment->getDirectory());
+        system($command);
     }
 }
