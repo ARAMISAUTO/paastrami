@@ -96,10 +96,12 @@ class Platform
     public function getPreprocessingData(array $machine)
     {
         $data = array(
-            'box'        => $machine['box'],
-            'machine'    => $machine['name'],
-            'platform'   => $this->name,
-            'repository' => realpath($this->getRepository()),
+            'box'         => $machine['box'],
+            'environment' => null,
+            'ip'          => '0.0.0.0',
+            'machine'     => $machine['name'],
+            'platform'    => $this->name,
+            'repository'  => realpath($this->getRepository()),
         );
         foreach ($this->getMachines() as $name => $spec) {
             $data[sprintf('machines.%s.box', $name)] = $spec['box'];
