@@ -102,6 +102,7 @@ class Platform
             'machine'     => $machine['name'],
             'platform'    => $this->name,
             'repository'  => realpath($this->getRepository()),
+            'sites'       => ''
         );
         foreach ($this->getMachines() as $name => $spec) {
             $data[sprintf('machines.%s.box', $name)] = $spec['box'];
