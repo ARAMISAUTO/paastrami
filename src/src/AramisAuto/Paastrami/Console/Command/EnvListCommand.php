@@ -20,6 +20,7 @@ class EnvListCommand extends Command
             ->setDescription("Lists available environments in platform")
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
+            ->addOption('no-status', null, InputOption::VALUE_NONE, 'Do not check environment status (faster)')
         ;
     }
 
@@ -34,14 +35,25 @@ class EnvListCommand extends Command
 
         // Find platforms directories
         foreach ($platform->getEnvironments() as $env) {
-            $table->addRow(
-                array(
-                    $env->getName(),
-                    $env->getPlatform()->getName(),
-                    implode(',', array_keys($env->getPlatform()->getMachines())),
-                    $env->getStatusText($env->getStatus())
-                )
-            );
+            if ($input->getOption('no-status')) {
+                $table->addRow(
+                    array(
+                        $env->getName(),
+                        $env->getPlatform()->getName(),
+                        implode(',', array_keys($env->getPlatform()->getMachines()))
+                    )
+                );
+            } else {
+                $table->addRow(
+                    array(
+                        $env->getName(),
+                        $env->getPlatform()->getName(),
+                        implode(',', array_keys($env->getPlatform()->getMachines())),
+                        $env->getStatusText($env->getStatus())
+                    )
+                );
+            }
+
         }
 
         // Render table
