@@ -77,6 +77,9 @@ class Environment
 
     public function up($provision = false)
     {
+        // Make sure environment exists
+        $this->checkExistence();
+
         // Generate Vagrant command
         $command = 'vagrant up --parallel';
         if (true === $provision) {
@@ -93,6 +96,9 @@ class Environment
 
     public function halt($force = false)
     {
+        // Make sure environment exists
+        $this->checkExistence();
+
         // Generate Vagrant command
         $command = 'vagrant halt';
         if (true === $force) {
@@ -109,6 +115,9 @@ class Environment
 
     public function destroy()
     {
+        // Make sure environment exists
+        $this->checkExistence();
+
         // Utils
         $fs = new Filesystem();
 
@@ -270,5 +279,19 @@ class Environment
         }
 
         return $texts[$status];
+    }
+
+    public function checkExistence()
+    {
+        if (!is_dir($this->getDirectory())) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Environment does not exist - platform="%s", environment="%s", directory="%s"',
+                    $this->getPlatform()->getName(),
+                    $this->getName(),
+                    $this->getDirectory()
+                )
+            );
+        }
     }
 }
