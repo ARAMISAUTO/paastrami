@@ -203,7 +203,7 @@ EOT;
         foreach ($local as $line) {
             $matches = array();
             if (!preg_match(sprintf('/%s\.%s/', preg_quote($domain), preg_quote($platform)), $line)) {
-                $localPurged[] = $line;
+                $localPurged[] = trim($line);
             }
         }
         file_put_contents('/etc/bind/named.conf.local', implode("\n", $localPurged));
