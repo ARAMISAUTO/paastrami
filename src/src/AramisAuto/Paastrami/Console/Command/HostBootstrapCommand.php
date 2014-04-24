@@ -57,14 +57,6 @@ class HostBootstrapCommand extends Command
             $input->getOption('vagrant-url')
         );
 
-        // Commandes pour l'installation des plugins Vagrant
-        $vagrantPlugins = array('vagrant-vbguest', 'vagrant-cachier', 'vagrant-salt');
-        $commandsVagrant = array();
-        foreach ($vagrantPlugins as $vagrantPlugin) {
-            $commandsVagrant[] = sprintf('vagrant plugin uninstall %s', $vagrantPlugin);
-            $commandsVagrant[] = sprintf('vagrant plugin install %s', $vagrantPlugin);
-        }
-
         // Exécution de la liste des commandes
         $commands = array_merge($commandsPackages, $commandsVagrant);
         foreach ($commands as $command) {
