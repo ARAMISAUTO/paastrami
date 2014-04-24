@@ -58,7 +58,7 @@ class HostBootstrapCommand extends Command
         );
 
         // Exécution de la liste des commandes
-        $commands = array_merge($commandsPackages, $commandsVagrant);
+        $commands = $commandsPackages;
         foreach ($commands as $command) {
             $process = new Process($command);
             $process->run(function ($type, $buffer) {
