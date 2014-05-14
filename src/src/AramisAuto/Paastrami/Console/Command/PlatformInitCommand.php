@@ -50,6 +50,7 @@ class PlatformInitCommand extends Command
         // Création du répertoire de la plateforme
         $fs = new Filesystem();
         $fs->mkdir($dirPlatform, 0755);
+        $fs->mkdir($dirPlatform.'/environments', 0755);
 
         // Clonage du dépôt Git
         $output->writeln(
