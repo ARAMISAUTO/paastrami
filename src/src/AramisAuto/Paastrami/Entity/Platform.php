@@ -17,7 +17,7 @@ class Platform
     public function __construct($name, $directory)
     {
         $this->name = $name;
-        $this->directory = sprintf('%s/platforms/%s', $directory, $this->name);
+        $this->directory = realpath(sprintf('%s/platforms/%s', $directory, $this->name));
         $this->initialize();
     }
 
