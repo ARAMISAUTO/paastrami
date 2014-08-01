@@ -28,14 +28,19 @@ class EnvListCommand extends Command
     {
         // @see http://symfony.com/fr/doc/current/components/console/helpers/tablehelper.html
         $table = $this->getHelperSet()->get('table');
-        $table->setHeaders(array('name', 'platform', 'boxes', 'status'));
 
         // Instanciate platform
         $platform = new Platform($input->getArgument('platform'), $input->getOption('working-directory'));
 
         // Find platforms directories
-        foreach ($platform->getEnvironments() as $env) {
+        $environments = $platform->getEnvironments();
+
+        // Number of environments
+        $output->writeln(sprintf("\nPlatform <info>%s</info> hosts <info>%d</info> environments\n", $platform->getName(), count($environments)));
+
+        foreach ($environments as $env) {
             if ($input->getOption('no-status')) {
+                $table->setHeaders(array('environment', 'platform', 'boxes'));
                 $table->addRow(
                     array(
                         $env->getName(),
@@ -44,6 +49,7 @@ class EnvListCommand extends Command
                     )
                 );
             } else {
+                $table->setHeaders(array('environment', 'platform', 'boxes', 'status'));
                 $table->addRow(
                     array(
                         $env->getName(),
