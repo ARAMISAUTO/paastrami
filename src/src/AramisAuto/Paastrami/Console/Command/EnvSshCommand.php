@@ -18,6 +18,7 @@ class EnvSshCommand extends Command
             ->setName('env:ssh')
             ->setDescription("Connects to a machine via SSH")
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
+            ->addOption('user', null, InputOption::VALUE_REQUIRED, 'Connect to the machine using this username', 'vagrant')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addArgument('environment', InputArgument::REQUIRED, 'Environment name')
             ->addArgument('machine', InputArgument::REQUIRED, 'Machine name');
@@ -32,7 +33,29 @@ class EnvSshCommand extends Command
         );
 
         // Build Vagrant command
-        $command = sprintf('vagrant ssh %s', $input->getArgument('machine'));
+        $user = $input->getOption('user');
+        $machine = $input->getArgument('machine');
+        if ($user == 'vagrant') {
+            $command = sprintf('vagrant ssh %s', $machine);
+        } else {
+            // Get machine spec
+            $machineSpec = $environment->getMachine($machine);
+            $ip = filter_var($machineSpec['ip'], FILTER_VALIDATE_IP);
+
+            // Make sure machine has a valid IP
+            if (false === $ip) {
+                throw new \RuntimeException(
+                    sprintf(
+                        'Machine does not have a valid IP adress - machine=%s, ip=%s',
+                        $machine,
+                        $machineSpec['ip']
+                    )
+                );
+            }
+
+            // Build explicit SSH command
+            $command = sprintf('ssh %s@%s', $user, $ip);
+        }
 
         // Execute command
         chdir($environment->getDirectory());

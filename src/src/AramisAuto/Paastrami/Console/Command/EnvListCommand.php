@@ -36,7 +36,13 @@ class EnvListCommand extends Command
         $environments = $platform->getEnvironments();
 
         // Number of environments
-        $output->writeln(sprintf("\nPlatform <info>%s</info> hosts <info>%d</info> environments\n", $platform->getName(), count($environments)));
+        $output->writeln(
+            sprintf(
+                "\nPlatform <info>%s</info> hosts <info>%d</info> environments\n",
+                $platform->getName(),
+                count($environments)
+            )
+        );
 
         foreach ($environments as $env) {
             if ($input->getOption('no-status')) {

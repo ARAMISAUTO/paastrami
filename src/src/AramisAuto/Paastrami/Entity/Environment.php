@@ -294,4 +294,56 @@ class Environment
             );
         }
     }
+
+    /**
+     * Returns environment's machines
+     *
+     * @return array
+     */
+    public function getMachines()
+    {
+        $machines = array();
+        $pathEtc = sprintf('%s/etc/paastrami', $this->getDirectory());
+        $specs = glob($pathEtc.'/*.json');
+        foreach ($specs as $filepath) {
+            $name = basename($filepath, '.json');
+            $machines[] = $this->getMachine($name);
+        }
+
+        return $machines;
+    }
+
+    /**
+     * Returns machine with corresponding name
+     *
+     * @return Machine
+     */
+    public function getMachine($name)
+    {
+        // Make sure spec file is readable
+        $pathSpec = sprintf('%s/etc/paastrami/%s.json', $this->getDirectory(), $name);
+        if (!is_readable($pathSpec)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not read machine specification file - machine=%s, file=%s',
+                    $name,
+                    $pathSpec
+                )
+            );
+        }
+
+        // Decode spec file
+        $spec = json_decode(file_get_contents($pathSpec), true);
+        if ($spec === false || $spec === null) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Machine specification file format is invalid - machine=%s, file=%s',
+                    $name,
+                    $pathSpec
+                )
+            );
+        }
+
+        return $spec;
+    }
 }
