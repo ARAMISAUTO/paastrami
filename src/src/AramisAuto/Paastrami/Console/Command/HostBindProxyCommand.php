@@ -198,7 +198,7 @@ EOT;
         $fs->remove($filesDns);
 
         // Purge des inclusions dans named.conf.local
-        $local = file('/etc/bind/named.conf.local');
+        $local = file('/etc/bind/named.conf.local', FILE_SKIP_EMPTY_LINES);
         $localPurged = array();
         foreach ($local as $line) {
             $matches = array();
