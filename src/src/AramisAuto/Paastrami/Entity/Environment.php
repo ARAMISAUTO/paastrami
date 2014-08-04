@@ -94,6 +94,27 @@ class Environment
         });
     }
 
+    /**
+     * Provisions each machine in environment
+     *
+     * @see https://docs.vagrantup.com/v2/cli/provision.html
+     */
+    public function provision()
+    {
+        // Make sure environment exists
+        $this->checkExistence();
+
+        // Generate Vagrant command
+        $command = 'vagrant provision --parallel';
+
+        // Execute command
+        $process = new Process($command, $this->getDirectory());
+        $process->setTimeout(0);
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+        });
+    }
+
     public function halt($force = false)
     {
         // Make sure environment exists
@@ -345,5 +366,151 @@ class Environment
         }
 
         return $spec;
+    }
+
+    /**
+     * Returns environment's sites
+     *
+     * @return array
+     */
+    public function getSites()
+    {
+        // Directory holding list of sites (one file per site)
+        $dirSites = sprintf('%s/etc/paastrami/sites', $this->getDirectory());
+
+        // Extract sites names and branches
+        $sites = array();
+        $filesSites = glob($dirSites.'/*');
+        foreach ($filesSites as $file) {
+            $sites[basename($file)] = trim(file_get_contents($file));
+        }
+
+        return $sites;
+    }
+
+    /**
+     * Deletes a site to environment
+     *
+     * @param string $name Site name
+     *
+     * @throws \InvalidArgumentException when site does not exist
+     */
+    public function removeSite($name)
+    {
+        // Check if site exists
+        if (!$this->siteExists($name)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Site does not exist - site=%s, environment=%s, platform=%s',
+                    $name,
+                    $this->getName(),
+                    $this->getPlatform()->getName()
+                )
+            );
+        }
+
+        // Delete site's file
+        $pathSite = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $name);
+        $fs = new Filesystem();
+        $fs->remove($pathSite);
+
+        // Reprovision machines
+        $this->provision();
+
+        return true;
+    }
+
+    /**
+     * Adds a site to environment
+     *
+     * @param string $name Site name
+     */
+    public function addSite($name, $branch = 'master')
+    {
+        // Check if site exists
+        if ($this->siteExists($name)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Site already exists - site=%s, environment=%s, platform=%s',
+                    $name,
+                    $this->getName(),
+                    $this->getPlatform()->getName()
+                )
+            );
+        }
+
+        // Create site file
+        $pathSite = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $name);
+        if (file_put_contents($pathSite, $branch) === false) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Site could not be added - site=%s, branch=%s, environment=%s, platform=%s',
+                    $name,
+                    $branch,
+                    $this->getName(),
+                    $this->getPlatform()->getName()
+                )
+            );
+        }
+
+        // Reprovision machines
+        $this->provision();
+
+        return true;
+    }
+
+    /**
+     * Changes site's branch and reprovisions machines
+     *
+     * @param string $site Site name
+     * @param string $branch Branch name
+     */
+    public function changeSiteBranch($site, $branch)
+    {
+        // Check if site exists
+        if (!$this->siteExists($site)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Site does not exist - site=%s, environment=%s, platform=%s',
+                    $site,
+                    $this->getName(),
+                    $this->getPlatform()->getName()
+                )
+            );
+        }
+
+        // Create site file
+        $pathSite = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $site);
+        if (file_put_contents($pathSite, $branch) === false) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Site branch could not be changed - site=%s, branch=%s, environment=%s, platform=%s',
+                    $site,
+                    $branch,
+                    $this->getName(),
+                    $this->getPlatform()->getName()
+                )
+            );
+        }
+
+        // Reprovision machines
+        $this->provision();
+
+        return true;
+    }
+
+    /**
+     * Check if site exists in environment
+     *
+     * @param string $site Site
+     *
+     * @return bool True if site exists in environment
+     */
+    public function siteExists($site)
+    {
+        // Directory holding list of sites (one file per site)
+        $pathSite = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $site);
+
+        return is_readable($pathSite);
     }
 }

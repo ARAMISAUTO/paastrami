@@ -14,6 +14,10 @@ use AramisAuto\Paastrami\Console\Command\PlatformBuildCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformInitCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformListCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformPullCommand;
+use AramisAuto\Paastrami\Console\Command\SiteAddCommand;
+use AramisAuto\Paastrami\Console\Command\SiteChangeBranchCommand;
+use AramisAuto\Paastrami\Console\Command\SiteListCommand;
+use AramisAuto\Paastrami\Console\Command\SiteRemoveCommand;
 
 class Application extends \Symfony\Component\Console\Application
 {
@@ -43,6 +47,12 @@ class Application extends \Symfony\Component\Console\Application
         $commands[] = new EnvListCommand();
         $commands[] = new EnvUpCommand();
         $commands[] = new EnvSshCommand();
+
+        // site:*
+        $commands[] = new SiteAddCommand();
+        $commands[] = new SiteChangeBranchCommand();
+        $commands[] = new SiteListCommand();
+        $commands[] = new SiteRemoveCommand();
 
         return $commands;
     }
