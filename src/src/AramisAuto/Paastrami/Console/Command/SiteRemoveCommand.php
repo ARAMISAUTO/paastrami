@@ -31,6 +31,9 @@ class SiteRemoveCommand extends Command
             new Platform($input->getArgument('platform'), $input->getOption('working-directory'))
         );
 
+        // Make sure environment exists
+        $environment->checkExistence();
+
         // Remove site
         $site = $input->getArgument('site');
         $environment->removeSite($site);

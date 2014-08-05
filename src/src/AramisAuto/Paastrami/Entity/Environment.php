@@ -424,28 +424,52 @@ class Environment
      * Adds a site to environment
      *
      * @param string $name Site name
+     *
+     * @return array List of sites added (main site and dependencies)
      */
-    public function addSite($name, $branch = 'master')
+    public function addSite($site, $branch = 'master')
     {
         // Check if site exists
-        if ($this->siteExists($name)) {
+        if ($this->siteExists($site)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Site already exists - site=%s, environment=%s, platform=%s',
-                    $name,
+                    $site,
                     $this->getName(),
                     $this->getPlatform()->getName()
                 )
             );
         }
 
+        // Create dependencies
+        $sitesAdded = array();
+        $dependencies = $this->getPlatform()->getSiteDependencies($site);
+        foreach ($dependencies as $dependency) {
+            $pathDependency = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $dependency);
+            if (!file_exists($pathDependency)) {
+                if (file_put_contents($pathDependency, 'master') === false) {
+                    throw new \RuntimeException(
+                        sprintf(
+                            'Dependency could not be added - dependency=%s, branch=master, site=%s, environment=%s, platform=%s',
+                            $dependency,
+                            $site,
+                            $this->getName(),
+                            $this->getPlatform()->getName()
+                        )
+                    );
+                } else {
+                    $sitesAdded[] = $dependency;
+                }
+            }
+        }
+
         // Create site file
-        $pathSite = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $name);
+        $pathSite = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $site);
         if (file_put_contents($pathSite, $branch) === false) {
             throw new \RuntimeException(
                 sprintf(
                     'Site could not be added - site=%s, branch=%s, environment=%s, platform=%s',
-                    $name,
+                    $site,
                     $branch,
                     $this->getName(),
                     $this->getPlatform()->getName()
@@ -456,7 +480,7 @@ class Environment
         // Reprovision machines
         $this->provision();
 
-        return true;
+        return array_merge(array($site), $sitesAdded);
     }
 
     /**

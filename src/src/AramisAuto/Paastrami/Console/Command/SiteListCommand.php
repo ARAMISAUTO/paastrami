@@ -30,6 +30,9 @@ class SiteListCommand extends Command
             new Platform($input->getArgument('platform'), $input->getOption('working-directory'))
         );
 
+        // Make sure environment exists
+        $environment->checkExistence();
+
         // @see http://symfony.com/fr/doc/current/components/console/helpers/tablehelper.html
         $table = $this->getHelperSet()->get('table');
         $table->setHeaders(array('site', 'branch'));

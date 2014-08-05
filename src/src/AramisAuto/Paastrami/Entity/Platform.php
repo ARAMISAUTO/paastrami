@@ -154,4 +154,56 @@ class Platform
     {
         return $this->name;
     }
+
+    /**
+     * Returns list of site's dependencies
+     *
+     * @param string $site Site name
+     *
+     * @return array List of sites names
+     */
+    public function getSiteDependencies($site)
+    {
+        // Check if site exists
+        if (!$this->siteExists($site)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Site does not exist in platform - site=%s, platform=%s',
+                    $site,
+                    $this->getName()
+                )
+            );
+        }
+
+        // Read dependencies from site's file
+        $sites = explode(
+            "\n",
+            trim(
+                file_get_contents(
+                    sprintf(
+                        '%s/etc/paastrami/sites/%s',
+                        $this->getRepository(),
+                        $site
+                    )
+                )
+            )
+        );
+
+        return $sites;
+    }
+
+    /**
+     * Check if site exists in environment
+     *
+     * @param string $site Site
+     *
+     * @return bool True if site exists in environment
+     */
+    public function siteExists($site)
+    {
+        // Directory holding list of sites (one file per site)
+        $pathSite = sprintf('%s/etc/paastrami/sites/%s', $this->getRepository(), $site);
+
+        return is_readable($pathSite);
+    }
 }

@@ -32,17 +32,22 @@ class SiteAddCommand extends Command
             new Platform($input->getArgument('platform'), $input->getOption('working-directory'))
         );
 
+        // Make sure environment exists
+        $environment->checkExistence();
+
         // Add site
         $branch = $input->getOption('branch');
         $site = $input->getArgument('site');
-        $environment->addSite($site, $branch);
+        $sitesAdded = $environment->addSite($site, $branch);
 
         // Log
+        array_shift($sitesAdded);
         $output->writeln(
             sprintf(
-                '<info>Site has been added and machines reprovisioned</info> - site=%s, branch=%s, environment=%s, platform=%s',
+                '<info>Site has been added and machines reprovisioned</info> - site=%s, branch=%s, dependencies="%s", environment=%s, platform=%s',
                 $site,
                 $branch,
+                implode(',', $sitesAdded),
                 $environment->getName(),
                 $environment->getPlatform()->getName()
             )
