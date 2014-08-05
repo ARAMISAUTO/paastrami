@@ -35,11 +35,14 @@ class Environment
         // Create environment directory
         $fs->mkdir($this->directory);
 
+        // Remove leftover Vagrantfile
+        $fs->remove(sprintf('%s/builders/vagrant/Vagrantfile', $this->getPlatform()->getRepository()));
+
         // Mirror platform files in environment directory
         $fs->mirror(
-            $this->platform->getRepository(),
+            $this->getPlatform()->getRepository(),
             $this->getDirectory(),
-            $finder->notName('.git')->followLinks()->in($this->platform->getRepository()),
+            $finder->notName('.git')->followLinks()->in($this->getPlatform()->getRepository()),
             array('delete' => false)
         );
     }
