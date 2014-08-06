@@ -210,9 +210,7 @@ class Environment
     {
         $process = new Process(sprintf('nmap -v -sP %s', $ipRange));
         $process->setTimeout(120); // ~time to scan 255 hosts on a standard network
-        $process->run(function ($type, $buffer) {
-            echo $buffer;
-        });
+        $process->run();
         if (!$process->isSuccessful()) {
             throw new \RuntimeException($process->getErrorOutput());
         }
