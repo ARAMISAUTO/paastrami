@@ -21,7 +21,8 @@ class EnvSshCommand extends Command
             ->addOption('user', null, InputOption::VALUE_REQUIRED, 'Connect to the machine using this username', 'vagrant')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addArgument('environment', InputArgument::REQUIRED, 'Environment name')
-            ->addArgument('machine', InputArgument::REQUIRED, 'Machine name');
+            ->addArgument('machine', InputArgument::REQUIRED, 'Machine name')
+            ->addArgument('cmd', InputArgument::OPTIONAL, 'Execute this command on machine instead of connecting to it');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -37,6 +38,9 @@ class EnvSshCommand extends Command
         $machine = $input->getArgument('machine');
         if ($user == 'vagrant') {
             $command = sprintf('vagrant ssh %s', $machine);
+            if ($input->getArgument('cmd')) {
+                $command .= ' --command '.$input->getArgument('cmd');
+            }
         } else {
             // Get machine spec
             $machineSpec = $environment->getMachine($machine);
@@ -55,6 +59,9 @@ class EnvSshCommand extends Command
 
             // Build explicit SSH command
             $command = sprintf('ssh %s@%s', $user, $ip);
+            if ($input->getArgument('cmd')) {
+                $command .= ' '.$input->getArgument('cmd');
+            }
         }
 
         // Execute command
