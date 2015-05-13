@@ -47,13 +47,10 @@ class Environment
         );
     }
 
-    public function build($ipRange, array $sites = null, $dirSources = null)
+    public function build(array $sites = null, $dirSources = null)
     {
         // Utils
         $fs = new Filesystem();
-
-        // Find available IPs for machines
-        $ips = $this->findAvailableIps(count($this->platform->getMachines()), $ipRange);
 
         // Generate sites list
         if (!is_null($sites)) {
@@ -64,7 +61,7 @@ class Environment
         $i = 0;
         foreach ($this->platform->getMachines() as $machine) {
             // Generate preprocessing data
-            $data = $this->getPreprocessingData($machine, $ips[$i], $ips, $sites);
+            $data = $this->getPreprocessingData($machine, $sites);
 
             // Preprocess environment files
             $this->preprocess($data);
@@ -206,44 +203,15 @@ class Environment
         return $mapSites;
     }
 
-    private function findAvailableIps($count, $ipRange)
-    {
-        $process = new Process(sprintf('nmap -v -sP %s', $ipRange));
-        $process->setTimeout(120); // ~time to scan 255 hosts on a standard network
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-        $matches = array();
-        $found = preg_match_all(
-            '/Nmap scan report for (\d+\.\d+\.\d+\.\d+) \[host down\]/',
-            $process->getOutput(),
-            $matches
-        );
-        if (!$found || count($matches[1]) < $count) {
-            throw new \RuntimeException(
-                sprintf('Could not find enough available IPs - count="%d" range="%s"', $count, $ipRange)
-            );
-        }
-
-        return array_slice($matches[1], 0, $count);
-    }
-
-    public function getPreprocessingData(array $machine, $ip, array $ips, array $sites = null)
+    public function getPreprocessingData(array $machine, array $sites = null)
     {
         // Get platform related data
         $data = $this->platform->getPreprocessingData($machine);
 
         // Add environment data
         $data['environment'] = $this->name;
-        $data['ip'] = $ip;
+        $data['platform'] = $this->platform->getName();
         $data['sites'] = '"'.implode('","', array_keys($sites)).'"';
-
-        $i = 0;
-        foreach ($this->platform->getMachines() as $machine) {
-            $data[sprintf('machines.%s.ip', $machine['name'])] = $ips[$i];
-            $i++;
-        }
 
         return $data;
     }

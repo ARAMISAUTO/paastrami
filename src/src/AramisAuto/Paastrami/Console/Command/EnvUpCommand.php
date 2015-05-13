@@ -18,7 +18,6 @@ class EnvUpCommand extends Command
             ->setName('env:up')
             ->setDescription("Builds and starts environment")
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
-            ->addOption('ip-range', null, InputOption::VALUE_REQUIRED, "Plage d'IP", '192.168.0.2-254')
             ->addOption('sources', null, InputOption::VALUE_REQUIRED, "Chemin relatif vers le répertoire qui va héberger les sources des sites", 'var/www')
             ->addOption('provision', null, InputOption::VALUE_NONE, 'Force provisioning of boxes')
             ->addArgument('platform', InputArgument::REQUIRED, 'Nom de la plateforme')
@@ -39,7 +38,7 @@ class EnvUpCommand extends Command
         );
 
         // Build environment
-        $environment->build($input->getOption('ip-range'), $input->getArgument('sites'), $input->getOption('sources'));
+        $environment->build($input->getArgument('sites'), $input->getOption('sources'));
 
         // Start boxes
         $environment->up($input->getOption('provision'));

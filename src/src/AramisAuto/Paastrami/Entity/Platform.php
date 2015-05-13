@@ -98,7 +98,6 @@ class Platform
         $data = array(
             'box'         => $machine['box'],
             'environment' => null,
-            'ip'          => '0.0.0.0',
             'machine'     => $machine['name'],
             'platform'    => $this->name,
             'repository'  => realpath($this->getRepository()),

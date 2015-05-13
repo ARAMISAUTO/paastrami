@@ -7,8 +7,6 @@ use AramisAuto\Paastrami\Console\Command\EnvInitCommand;
 use AramisAuto\Paastrami\Console\Command\EnvListCommand;
 use AramisAuto\Paastrami\Console\Command\EnvSshCommand;
 use AramisAuto\Paastrami\Console\Command\EnvUpCommand;
-use AramisAuto\Paastrami\Console\Command\HostApacheCommand;
-use AramisAuto\Paastrami\Console\Command\HostBindProxyCommand;
 use AramisAuto\Paastrami\Console\Command\HostBootstrapCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformBuildCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformInitCommand;
@@ -29,10 +27,6 @@ class Application extends \Symfony\Component\Console\Application
     protected function getDefaultCommands()
     {
         $commands = parent::getDefaultCommands();
-
-        // host:*
-        $commands[] = new HostBootstrapCommand();
-        $commands[] = new HostBindProxyCommand();
 
         // platform:*
         $commands[] = new PlatformBuildCommand();
