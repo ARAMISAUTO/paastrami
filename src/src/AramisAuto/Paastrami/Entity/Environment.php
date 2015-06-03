@@ -42,7 +42,7 @@ class Environment
         $fs->mirror(
             $this->getPlatform()->getRepository(),
             $this->getDirectory(),
-            $finder->followLinks()->in($this->getPlatform()->getRepository()),
+            $finder->ignoreDotFiles(false)->ignoreVCS(false)->followLinks()->in($this->getPlatform()->getRepository()),
             array('delete' => false)
         );
     }
