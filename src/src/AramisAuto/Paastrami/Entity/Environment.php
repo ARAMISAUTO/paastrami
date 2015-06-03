@@ -42,7 +42,7 @@ class Environment
         $fs->mirror(
             $this->getPlatform()->getRepository(),
             $this->getDirectory(),
-            $finder->notName('.git')->followLinks()->in($this->getPlatform()->getRepository()),
+            $finder->followLinks()->in($this->getPlatform()->getRepository()),
             array('delete' => false)
         );
     }
