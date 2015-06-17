@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 class EnvSshCommand extends Command
 {
@@ -42,23 +43,17 @@ class EnvSshCommand extends Command
                 $command .= ' --command '.$input->getArgument('cmd');
             }
         } else {
-            // Get machine spec
-            $machineSpec = $environment->getMachine($machine);
-            $ip = filter_var($machineSpec['ip'], FILTER_VALIDATE_IP);
+            // Get ssh configuration and use it to build command
+            $cmdSShConfig = sprintf('vagrant ssh-config %s', $machine);
+            $process = new Process($cmdSShConfig, $environment->getDirectory());
+            $process->run();
+            $sshConfig = $process->getOutput();
+            $matches = array();
+            preg_match('/Port (\d+)/', $sshConfig, $matches);
 
-            // Make sure machine has a valid IP
-            if (false === $ip) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Machine does not have a valid IP adress - machine=%s, ip=%s',
-                        $machine,
-                        $machineSpec['ip']
-                    )
-                );
-            }
 
             // Build explicit SSH command
-            $command = sprintf('ssh %s@%s', $user, $ip);
+            $command = sprintf('ssh -p %d %s@127.0.0.1', $matches[1], $user);
             if ($input->getArgument('cmd')) {
                 $command .= ' '.$input->getArgument('cmd');
             }
