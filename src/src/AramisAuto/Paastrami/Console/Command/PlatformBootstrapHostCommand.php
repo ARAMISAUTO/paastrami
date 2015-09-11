@@ -9,12 +9,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 // TODO : log
 // TODO : MAL => couplage fort avec Salt (mais c'est déjà un début pour le provisioning multiplateforme du host)
-class HostBootstrapCommand extends Command
+class PlatformBootstrapHostCommand extends Command
 {
     protected function configure()
     {

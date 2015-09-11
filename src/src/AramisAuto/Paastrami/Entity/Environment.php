@@ -3,7 +3,6 @@
 namespace AramisAuto\Paastrami\Entity;
 
 use AramisAuto\Component\Preprocessor\Preprocessor;
-use AramisAuto\Paastrami\Entity\Platform;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
@@ -455,7 +454,7 @@ class Environment
     /**
      * Changes site's branch and reprovisions machines
      *
-     * @param string $site Site name
+     * @param string $site   Site name
      * @param string $branch Branch name
      */
     public function changeSiteBranch($site, $branch)
