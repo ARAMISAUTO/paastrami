@@ -3,7 +3,6 @@
 namespace AramisAuto\Paastrami\Entity;
 
 use AramisAuto\Component\Preprocessor\Preprocessor;
-use AramisAuto\Paastrami\Entity\Vagrantfile;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 

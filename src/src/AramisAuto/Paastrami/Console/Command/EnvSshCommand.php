@@ -51,7 +51,6 @@ class EnvSshCommand extends Command
             $matches = array();
             preg_match('/Port (\d+)/', $sshConfig, $matches);
 
-
             // Build explicit SSH command
             $command = sprintf('ssh -p %d %s@127.0.0.1', $matches[1], $user);
             if ($input->getArgument('cmd')) {
