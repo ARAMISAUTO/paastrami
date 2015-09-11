@@ -7,6 +7,7 @@ use AramisAuto\Paastrami\Console\Command\EnvInitCommand;
 use AramisAuto\Paastrami\Console\Command\EnvListCommand;
 use AramisAuto\Paastrami\Console\Command\EnvSshCommand;
 use AramisAuto\Paastrami\Console\Command\EnvUpCommand;
+use AramisAuto\Paastrami\Console\Command\HostBootstrapCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformBuildCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformInitCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformListCommand;
