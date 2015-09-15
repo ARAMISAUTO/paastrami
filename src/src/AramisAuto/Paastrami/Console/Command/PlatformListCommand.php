@@ -16,20 +16,19 @@ class PlatformListCommand extends Command
     {
         $this
             ->setName('platform:list')
-            ->setDescription("Lists available platforms")
-            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
-        ;
+            ->setDescription('Lists available platforms')
+            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // @see http://symfony.com/fr/doc/current/components/console/helpers/tablehelper.html
         $table = $this->getHelperSet()->get('table');
-        $table->setHeaders(array('name', 'boxes', 'environments'));
+        $table->setHeaders(['name', 'boxes', 'environments']);
 
         // Find platforms directories
         $finder = new Finder();
-        $platforms = array();
+        $platforms = [];
         $dirsPlatforms = $finder
             ->directories()
             ->depth('< 1')
@@ -40,17 +39,17 @@ class PlatformListCommand extends Command
             $platform = new Platform($dir->getFilename(), $input->getOption('working-directory'));
 
             // Platform environments
-            $environments = array();
+            $environments = [];
             foreach ($platform->getEnvironments() as $environment) {
                 $environments[] = $environment->getName();
             }
 
             $table->addRow(
-                array(
+                [
                     $platform->getName(),
                     implode(',', array_keys($platform->getMachines())),
-                    implode(',', $environments)
-                )
+                    implode(',', $environments),
+                ]
             );
         }
 

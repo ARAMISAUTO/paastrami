@@ -16,7 +16,7 @@ class EnvInitCommand extends Command
     {
         $this
             ->setName('env:init')
-            ->setDescription("Creates environment directory structure and copies files from platform")
+            ->setDescription('Creates environment directory structure and copies files from platform')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
             ->addArgument('platform', InputArgument::REQUIRED, 'Nom de la plateforme')
             ->addArgument('environment', InputArgument::REQUIRED, "Nom de l'environnement");

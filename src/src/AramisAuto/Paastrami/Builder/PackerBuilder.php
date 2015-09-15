@@ -6,6 +6,5 @@ class PackerBuilder
 {
     public function build($pathPlatform)
     {
-
     }
 }

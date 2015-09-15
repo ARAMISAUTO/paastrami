@@ -9,7 +9,7 @@ class Vagrantfile
     public function __construct($string)
     {
         // Valeurs par défaut
-        $this->data = array('machines' => null);
+        $this->data = ['machines' => null];
 
         // Extraction des données
         $this->data = array_merge($this->data, $this->analyze($string));
@@ -38,7 +38,7 @@ class Vagrantfile
     protected function analyze($string)
     {
         // Liste des machines
-        $matches = array();
+        $matches = [];
         $pattern = '/config\.vm\.define "(\w+)" do \|\w+\|/';
         $found = preg_match_all($pattern, $string, $matches);
         if (!$found) {
@@ -46,16 +46,16 @@ class Vagrantfile
                 sprintf('Aucune déclaration de machine n\' a pu être extraite - pattern="%s"', $pattern)
             );
         }
-        $machines = array();
+        $machines = [];
         foreach ($matches[1] as $vmName) {
-            $machines[] = array('name' => $vmName);
+            $machines[] = ['name' => $vmName];
         }
 
         // Récupération de la box associée à chaque machine
         $patternBox = '/(%s).vm.box ?= ?"(.+)"/';
 
         // Box par défaut
-        $matches = array();
+        $matches = [];
         $boxDefault = false;
         if (preg_match_all(sprintf($patternBox, 'config'), $string, $matches)) {
             $boxDefault = $matches[2][0];
@@ -64,7 +64,7 @@ class Vagrantfile
         // On tente d'abord d'obtenir le nom de la boxe explicitement lié à la machine
         // puis on se rabat sur la box par défaut
         for ($i = 0; $i < count($machines); $i++) {
-            $matches = array();
+            $matches = [];
             if (preg_match_all(sprintf($patternBox, $machines[$i]['name']), $string, $matches)) {
                 $machines[$i]['box'] = $matches[2][0];
             } else {
@@ -82,6 +82,6 @@ class Vagrantfile
             }
         }
 
-        return array('machines' => $machines);
+        return ['machines' => $machines];
     }
 }

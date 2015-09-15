@@ -16,16 +16,16 @@ class EnvUpCommand extends Command
     {
         $this
             ->setName('env:up')
-            ->setDescription("Builds and starts environment")
+            ->setDescription('Builds and starts environment')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
-            ->addOption('sources', null, InputOption::VALUE_REQUIRED, "Chemin relatif vers le répertoire qui va héberger les sources des sites", 'var/www')
+            ->addOption('sources', null, InputOption::VALUE_REQUIRED, 'Chemin relatif vers le répertoire qui va héberger les sources des sites', 'var/www')
             ->addOption('provision', null, InputOption::VALUE_NONE, 'Force provisioning of boxes')
             ->addArgument('platform', InputArgument::REQUIRED, 'Nom de la plateforme')
             ->addArgument('environment', InputArgument::REQUIRED, "Nom de l'environnement")
             ->addArgument(
                 'sites',
                 InputArgument::IS_ARRAY | InputArgument::REQUIRED,
-                "Liste des sites à configurer. Format: nom:branche"
+                'Liste des sites à configurer. Format: nom:branche'
             );
     }
 

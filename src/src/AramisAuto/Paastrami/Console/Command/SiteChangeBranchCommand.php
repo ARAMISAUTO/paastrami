@@ -16,7 +16,7 @@ class SiteChangeBranchCommand extends Command
     {
         $this
             ->setName('site:change-branch')
-            ->setDescription("Changes site branch")
+            ->setDescription('Changes site branch')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addArgument('environment', InputArgument::REQUIRED, 'Environment name')

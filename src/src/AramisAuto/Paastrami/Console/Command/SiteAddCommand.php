@@ -16,7 +16,7 @@ class SiteAddCommand extends Command
     {
         $this
             ->setName('site:add')
-            ->setDescription("Adds site to environment")
+            ->setDescription('Adds site to environment')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addOption('branch', null, InputOption::VALUE_REQUIRED, 'Site branch', 'master')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')

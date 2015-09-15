@@ -17,8 +17,7 @@ class PlatformPullCommand extends Command
             ->setName('platform:pull')
             ->setDescription("Mise à jour du dépôt Git d'une plateforme")
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
-            ->addArgument('name', InputArgument::REQUIRED, 'Nom de la plateforme')
-        ;
+            ->addArgument('name', InputArgument::REQUIRED, 'Nom de la plateforme');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,7 +30,7 @@ class PlatformPullCommand extends Command
                 sprintf(
                     'La plateforme n\'existe pas %s',
                     json_encode(
-                        array('platform'=> $input->getArgument('name'), 'directory' => $dirPlatform),
+                        ['platform' => $input->getArgument('name'), 'directory' => $dirPlatform],
                         JSON_UNESCAPED_SLASHES
                     )
                 )

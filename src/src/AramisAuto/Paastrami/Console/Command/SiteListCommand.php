@@ -16,7 +16,7 @@ class SiteListCommand extends Command
     {
         $this
             ->setName('site:list')
-            ->setDescription("Lists sites in environment")
+            ->setDescription('Lists sites in environment')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addArgument('environment', InputArgument::REQUIRED, 'Environment name');
@@ -35,7 +35,7 @@ class SiteListCommand extends Command
 
         // @see http://symfony.com/fr/doc/current/components/console/helpers/tablehelper.html
         $table = $this->getHelperSet()->get('table');
-        $table->setHeaders(array('site', 'branch'));
+        $table->setHeaders(['site', 'branch']);
 
         // Get environment sites
         $sites = $environment->getSites();
@@ -51,7 +51,7 @@ class SiteListCommand extends Command
         );
 
         foreach ($sites as $name => $branch) {
-            $table->addRow(array($name, $branch));
+            $table->addRow([$name, $branch]);
         }
 
         // Render table

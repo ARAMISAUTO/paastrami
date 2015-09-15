@@ -21,8 +21,7 @@ class PlatformBootstrapHostCommand extends Command
             ->setName('host:bootstrap')
             ->setDescription('Installs paastrami dependencies on host')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
-            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
-        ;
+            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,10 +30,10 @@ class PlatformBootstrapHostCommand extends Command
         $platform = new Platform($input->getArgument('platform'), $input->getOption('working-directory'));
 
         // Generate Salt minion configuration file
-        $data = array(
+        $data = [
             'platform'          => $platform->getName(),
-            'working-directory' => realpath($input->getOption('working-directory'))
-        );
+            'working-directory' => realpath($input->getOption('working-directory')),
+        ];
         $pathSaltConfDir = sprintf('%s/provisioners/salt/etc', $platform->getRepository());
         $preprocessor = new Preprocessor($data, 'paastrami.');
         $preprocessor->preprocess($pathSaltConfDir);
