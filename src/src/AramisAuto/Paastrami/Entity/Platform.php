@@ -11,7 +11,7 @@ class Platform
     private $directory;
     private $firstMachine;
     private $name;
-    private $machines = array();
+    private $machines = [];
 
     public function __construct($name, $directory)
     {
@@ -82,7 +82,7 @@ class Platform
         });
 
         // Get file to generated Vagrant box
-        $matches = array();
+        $matches = [];
         $found = preg_match(
             "/==> Builds finished\. The artifacts of successful builds are:\n-->.+: (.+)/",
             $process->getOutput(),
@@ -94,14 +94,14 @@ class Platform
 
     public function getPreprocessingData(array $machine)
     {
-        $data = array(
+        $data = [
             'box'         => $machine['box'],
             'environment' => null,
             'machine'     => $machine['name'],
             'platform'    => $this->name,
             'repository'  => realpath($this->getRepository()),
-            'sites'       => ''
-        );
+            'sites'       => '',
+        ];
         foreach ($this->getMachines() as $name => $spec) {
             $data[sprintf('machines.%s.box', $name)] = $spec['box'];
         }
@@ -113,7 +113,7 @@ class Platform
     {
         // Find environments directories
         $finder = new Finder();
-        $environments = array();
+        $environments = [];
         $dirs = $finder
             ->directories()
             ->depth('< 1')
@@ -154,7 +154,7 @@ class Platform
     }
 
     /**
-     * Returns list of site's dependencies
+     * Returns list of site's dependencies.
      *
      * @param string $site Site name
      *
@@ -191,7 +191,7 @@ class Platform
     }
 
     /**
-     * Check if site exists in environment
+     * Check if site exists in environment.
      *
      * @param string $site Site
      *

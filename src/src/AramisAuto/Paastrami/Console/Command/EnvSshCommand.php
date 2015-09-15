@@ -17,7 +17,7 @@ class EnvSshCommand extends Command
     {
         $this
             ->setName('env:ssh')
-            ->setDescription("Connects to a machine via SSH")
+            ->setDescription('Connects to a machine via SSH')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addOption('user', null, InputOption::VALUE_REQUIRED, 'Connect to the machine using this username', 'vagrant')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
@@ -48,7 +48,7 @@ class EnvSshCommand extends Command
             $process = new Process($cmdSShConfig, $environment->getDirectory());
             $process->run();
             $sshConfig = $process->getOutput();
-            $matches = array();
+            $matches = [];
             preg_match('/Port (\d+)/', $sshConfig, $matches);
 
             // Build explicit SSH command

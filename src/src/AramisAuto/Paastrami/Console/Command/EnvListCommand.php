@@ -16,11 +16,10 @@ class EnvListCommand extends Command
     {
         $this
             ->setName('env:list')
-            ->setDescription("Lists available environments in platform")
+            ->setDescription('Lists available environments in platform')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
-            ->addOption('no-status', null, InputOption::VALUE_NONE, 'Do not check environment status (faster)')
-        ;
+            ->addOption('no-status', null, InputOption::VALUE_NONE, 'Do not check environment status (faster)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -45,26 +44,25 @@ class EnvListCommand extends Command
 
         foreach ($environments as $env) {
             if ($input->getOption('no-status')) {
-                $table->setHeaders(array('environment', 'platform', 'boxes'));
+                $table->setHeaders(['environment', 'platform', 'boxes']);
                 $table->addRow(
-                    array(
-                        $env->getName(),
-                        $env->getPlatform()->getName(),
-                        implode(',', array_keys($env->getPlatform()->getMachines()))
-                    )
-                );
-            } else {
-                $table->setHeaders(array('environment', 'platform', 'boxes', 'status'));
-                $table->addRow(
-                    array(
+                    [
                         $env->getName(),
                         $env->getPlatform()->getName(),
                         implode(',', array_keys($env->getPlatform()->getMachines())),
-                        $env->getStatusText($env->getStatus())
-                    )
+                    ]
+                );
+            } else {
+                $table->setHeaders(['environment', 'platform', 'boxes', 'status']);
+                $table->addRow(
+                    [
+                        $env->getName(),
+                        $env->getPlatform()->getName(),
+                        implode(',', array_keys($env->getPlatform()->getMachines())),
+                        $env->getStatusText($env->getStatus()),
+                    ]
                 );
             }
-
         }
 
         // Render table

@@ -42,7 +42,7 @@ class Environment
             $this->getPlatform()->getRepository(),
             $this->getDirectory(),
             $finder->ignoreDotFiles(false)->ignoreVCS(false)->followLinks()->in($this->getPlatform()->getRepository()),
-            array('delete' => false)
+            ['delete' => false]
         );
     }
 
@@ -94,7 +94,7 @@ class Environment
     }
 
     /**
-     * Provisions each machine in environment
+     * Provisions each machine in environment.
      *
      * @see https://docs.vagrantup.com/v2/cli/provision.html
      */
@@ -166,7 +166,7 @@ class Environment
         // Utils
         $fs = new Filesystem();
 
-        $mapSites = array();
+        $mapSites = [];
         foreach ($sites as $siteDef) {
             $siteParts = explode(':', $siteDef);
             $mapSites[$siteParts[0]] = 'master';
@@ -232,14 +232,14 @@ class Environment
 
     public function getStatus()
     {
-        $statuses = array();
+        $statuses = [];
         foreach ($this->getPlatform()->getMachines() as $machine) {
             // Execute vagrant command
             $process = new Process('vagrant status '.$machine['name'], $this->getDirectory());
             $process->run();
 
             // Parse output
-            $matches = array();
+            $matches = [];
             $found = preg_match(sprintf('/%s +(\w+)/', $machine['name']), $process->getOutput(), $matches);
             if (!$found) {
                 $statuses[] = self::STATUS_UNKNOWN;
@@ -262,7 +262,7 @@ class Environment
 
     public function getStatusText($status)
     {
-        $texts = array(1 => 'halted', 2 => 'mixed', 3 => 'new', 4 => 'unknown', 5 => 'up');
+        $texts = [1 => 'halted', 2 => 'mixed', 3 => 'new', 4 => 'unknown', 5 => 'up'];
         if (!isset($texts[$status])) {
             $status = 3;
         }
@@ -285,13 +285,13 @@ class Environment
     }
 
     /**
-     * Returns environment's machines
+     * Returns environment's machines.
      *
      * @return array
      */
     public function getMachines()
     {
-        $machines = array();
+        $machines = [];
         $pathEtc = sprintf('%s/etc/paastrami', $this->getDirectory());
         $specs = glob($pathEtc.'/*.json');
         foreach ($specs as $filepath) {
@@ -303,7 +303,7 @@ class Environment
     }
 
     /**
-     * Returns machine with corresponding name
+     * Returns machine with corresponding name.
      *
      * @return Machine
      */
@@ -337,7 +337,7 @@ class Environment
     }
 
     /**
-     * Returns environment's sites
+     * Returns environment's sites.
      *
      * @return array
      */
@@ -347,7 +347,7 @@ class Environment
         $dirSites = sprintf('%s/etc/paastrami/sites', $this->getDirectory());
 
         // Extract sites names and branches
-        $sites = array();
+        $sites = [];
         $filesSites = glob($dirSites.'/*');
         foreach ($filesSites as $file) {
             $sites[basename($file)] = trim(file_get_contents($file));
@@ -357,7 +357,7 @@ class Environment
     }
 
     /**
-     * Deletes a site to environment
+     * Deletes a site to environment.
      *
      * @param string $name Site name
      *
@@ -389,7 +389,7 @@ class Environment
     }
 
     /**
-     * Adds a site to environment
+     * Adds a site to environment.
      *
      * @param string $name Site name
      *
@@ -410,7 +410,7 @@ class Environment
         }
 
         // Create dependencies
-        $sitesAdded = array();
+        $sitesAdded = [];
         $dependencies = $this->getPlatform()->getSiteDependencies($site);
         foreach ($dependencies as $dependency) {
             $pathDependency = sprintf('%s/etc/paastrami/sites/%s', $this->getDirectory(), $dependency);
@@ -448,11 +448,11 @@ class Environment
         // Reprovision machines
         $this->provision();
 
-        return array_merge(array($site), $sitesAdded);
+        return array_merge([$site], $sitesAdded);
     }
 
     /**
-     * Changes site's branch and reprovisions machines
+     * Changes site's branch and reprovisions machines.
      *
      * @param string $site   Site name
      * @param string $branch Branch name
@@ -492,7 +492,7 @@ class Environment
     }
 
     /**
-     * Check if site exists in environment
+     * Check if site exists in environment.
      *
      * @param string $site Site
      *

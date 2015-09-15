@@ -6,7 +6,7 @@ use Symfony\Component\Finder\Finder;
 
 class Preprocessor
 {
-    public $mapTokens = array();
+    public $mapTokens = [];
     public $enclosing;
     public $prefix;
     public $suffix;
@@ -26,7 +26,7 @@ class Preprocessor
         $files = $finder->files()->name('*'.$this->suffix)->in($directory);
 
         // Store rendered files
-        $rendered = array();
+        $rendered = [];
 
         // Preprocess files
         foreach ($files as $file) {
@@ -42,7 +42,7 @@ class Preprocessor
             file_put_contents($pathRendered, $this->replaceTokens(file_get_contents($pathOrig)));
 
             // Add to store
-            $rendered[] = array($pathOrig, $pathRendered);
+            $rendered[] = [$pathOrig, $pathRendered];
         }
 
         return $rendered;

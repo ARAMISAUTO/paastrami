@@ -16,7 +16,7 @@ class EnvDestroyCommand extends Command
     {
         $this
             ->setName('env:destroy')
-            ->setDescription("Deletes the environment")
+            ->setDescription('Deletes the environment')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addArgument('environment', InputArgument::REQUIRED, 'Environment name');

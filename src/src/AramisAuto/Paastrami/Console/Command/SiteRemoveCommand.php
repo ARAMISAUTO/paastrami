@@ -16,7 +16,7 @@ class SiteRemoveCommand extends Command
     {
         $this
             ->setName('site:remove')
-            ->setDescription("Removes site from environment")
+            ->setDescription('Removes site from environment')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
             ->addArgument('environment', InputArgument::REQUIRED, 'Environment name')

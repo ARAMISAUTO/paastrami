@@ -18,8 +18,7 @@ class HostBootstrapCommand extends Command
         $this
             ->setName('host:bootstrap')
             ->setDescription('Installs paastrami dependencies on host')
-            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
-        ;
+            ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -27,7 +26,7 @@ class HostBootstrapCommand extends Command
         // Preprocess Salt configuration
         $dirRoot = realpath(__DIR__.'/../../../../../..');
         $dirSalt = $dirRoot.'/src/salt';
-        $preprocessor = new Preprocessor(array('rootdir' => $dirRoot), 'paastrami.');
+        $preprocessor = new Preprocessor(['rootdir' => $dirRoot], 'paastrami.');
         $preprocessor->preprocess($dirSalt);
 
         // Log

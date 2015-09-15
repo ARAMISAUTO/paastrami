@@ -16,7 +16,7 @@ class EnvHaltCommand extends Command
     {
         $this
             ->setName('env:halt')
-            ->setDescription("Stops environment boxes")
+            ->setDescription('Stops environment boxes')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Working directory', '.')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Force shut down (equivalent of pulling power)')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')

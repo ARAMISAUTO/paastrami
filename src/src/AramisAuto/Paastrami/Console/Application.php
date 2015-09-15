@@ -1,4 +1,5 @@
 <?php
+
 namespace AramisAuto\Paastrami\Console;
 
 use AramisAuto\Paastrami\Console\Command\EnvDestroyCommand;

@@ -20,8 +20,7 @@ class PlatformInitCommand extends Command
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
             ->addOption('branch', null, InputOption::VALUE_REQUIRED, 'Branche du dépôt', 'master')
             ->addArgument('name', InputArgument::REQUIRED, 'Nom de la plateforme')
-            ->addArgument('git', InputArgument::REQUIRED, 'URL du dépôt Git de la plateforme')
-        ;
+            ->addArgument('git', InputArgument::REQUIRED, 'URL du dépôt Git de la plateforme');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
