@@ -54,7 +54,12 @@ class PlatformRundeckResourcesCommand extends Command
                             $input->getOption('host-suffix')
                         ),
                         'username' => $site,
-                        'tags' => [$platform->getName(), $environment->getName(), $site]
+                        'tags' => [
+                            'platform='.$platform->getName(),
+                            'environment='.$environment->getName(),
+                            'site='.$site,
+                            'machine='.$machine
+                        ]
                     );
                     $nodes[$node['nodename']] = $node;
                 }
