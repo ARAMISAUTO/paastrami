@@ -2,5 +2,4 @@
 .vagrant
 /platforms
 /vendor
-/composer.phar
 /nbproject

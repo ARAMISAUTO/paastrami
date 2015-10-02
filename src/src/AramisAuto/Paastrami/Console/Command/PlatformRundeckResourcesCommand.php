@@ -36,16 +36,13 @@ class PlatformRundeckResourcesCommand extends Command
         // Get environments
         $environments = $platform->getEnvironments();
 
-        // Get sites
-        $sites = $platform->getSites();
-
         // Build nodes list
         $nodes = [];
         foreach ($environments as $environment) {
             foreach ($machines as $machine) {
-                foreach (array_keys($sites) as $site) {
+                foreach (array_keys($environment->getSites()) as $site) {
                     $node = array(
-                        'nodename' => sprintf('%s_%s_%s', $machine['name'], $environment->getName(), $site),
+                        'nodename' => sprintf('%s_%s_%s', $site, $machine['name'], $environment->getName()),
                         'hostname' => sprintf(
                             '%s.%s.%s.%s',
                             $machine['name'],
@@ -56,8 +53,8 @@ class PlatformRundeckResourcesCommand extends Command
                         'username' => $site,
                         'tags' => [$platform->getName(), $environment->getName(), $site]
                     );
+                    $nodes[$node['nodename']] = $node;
                 }
-                $nodes[$node['nodename']] = $node;
             }
         }
 
