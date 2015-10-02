@@ -204,4 +204,24 @@ class Platform
 
         return is_readable($pathSite);
     }
+
+    /**
+     * Returns environment's sites.
+     *
+     * @return array
+     */
+    public function getSites()
+    {
+        // Directory holding list of sites (one file per site)
+        $dirSites = sprintf('%s/etc/paastrami/sites', $this->getRepository());
+
+        // Extract sites names and branches
+        $sites = [];
+        $filesSites = glob($dirSites.'/*');
+        foreach ($filesSites as $file) {
+            $sites[basename($file)] = trim(file_get_contents($file));
+        }
+
+        return $sites;
+    }
 }

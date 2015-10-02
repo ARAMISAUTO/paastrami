@@ -12,6 +12,7 @@ use AramisAuto\Paastrami\Console\Command\PlatformBuildCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformInitCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformListCommand;
 use AramisAuto\Paastrami\Console\Command\PlatformPullCommand;
+use AramisAuto\Paastrami\Console\Command\PlatformRundeckResourcesCommand;
 use AramisAuto\Paastrami\Console\Command\SiteAddCommand;
 use AramisAuto\Paastrami\Console\Command\SiteChangeBranchCommand;
 use AramisAuto\Paastrami\Console\Command\SiteListCommand;
@@ -33,6 +34,7 @@ class Application extends \Symfony\Component\Console\Application
         $commands[] = new PlatformInitCommand();
         $commands[] = new PlatformListCommand();
         $commands[] = new PlatformPullCommand();
+        $commands[] = new PlatformRundeckResourcesCommand();
 
         // env:*
         $commands[] = new EnvDestroyCommand();
