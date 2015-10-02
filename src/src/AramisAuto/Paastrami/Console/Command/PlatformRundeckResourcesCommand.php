@@ -58,7 +58,7 @@ class PlatformRundeckResourcesCommand extends Command
                             'platform='.$platform->getName(),
                             'environment='.$environment->getName(),
                             'site='.$site,
-                            'machine='.$machine
+                            'machine='.$machine['name']
                         ]
                     );
                     $nodes[$node['nodename']] = $node;
