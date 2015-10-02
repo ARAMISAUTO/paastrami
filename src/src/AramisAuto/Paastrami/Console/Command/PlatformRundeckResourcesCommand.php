@@ -41,7 +41,7 @@ class PlatformRundeckResourcesCommand extends Command
         foreach ($environments as $environment) {
             // Gets sites
             $sites = $environment->getSites();
-            $sites[] = 'rundeck';
+            $sites['rundeck'] = null;
             foreach ($machines as $machine) {
                 foreach (array_keys($sites) as $site) {
                     $node = array(
