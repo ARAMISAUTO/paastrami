@@ -19,7 +19,7 @@ class EnvBuildCommand extends Command
             ->setDescription('Builds environments')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Path to working directory', '.')
             ->addArgument('platform', InputArgument::REQUIRED, 'Platform name')
-            ->addArgument('environment', InputArgument::REQUIRED, "Environment name");
+            ->addArgument('environment', InputArgument::REQUIRED, 'Environment name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
