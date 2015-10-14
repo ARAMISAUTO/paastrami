@@ -2,6 +2,7 @@
 
 namespace AramisAuto\Paastrami\Console;
 
+use AramisAuto\Paastrami\Console\Command\EnvBuildCommand;
 use AramisAuto\Paastrami\Console\Command\EnvDestroyCommand;
 use AramisAuto\Paastrami\Console\Command\EnvHaltCommand;
 use AramisAuto\Paastrami\Console\Command\EnvInitCommand;
@@ -37,6 +38,7 @@ class Application extends \Symfony\Component\Console\Application
         $commands[] = new PlatformRundeckResourcesCommand();
 
         // env:*
+        $commands[] = new EnvBuildCommand();
         $commands[] = new EnvDestroyCommand();
         $commands[] = new EnvHaltCommand();
         $commands[] = new EnvInitCommand();
