@@ -9,8 +9,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 
 class PlatformRundeckResourcesCommand extends Command
 {
@@ -18,11 +16,10 @@ class PlatformRundeckResourcesCommand extends Command
     {
         $this
             ->setName('platform:rundeck-resources')
-            ->setDescription("Generate a Rundeck compatible list of machines")
+            ->setDescription('Generate a Rundeck compatible list of machines')
             ->addOption('working-directory', null, InputOption::VALUE_REQUIRED, 'Répertoire de travail', '.')
             ->addOption('host-suffix', null, InputOption::VALUE_OPTIONAL, 'Host to be appended to nodes hostname')
-            ->addArgument('platform', InputArgument::REQUIRED, 'Nom de la plateforme')
-        ;
+            ->addArgument('platform', InputArgument::REQUIRED, 'Nom de la plateforme');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -44,7 +41,7 @@ class PlatformRundeckResourcesCommand extends Command
             $sites['rundeck'] = null;
             foreach ($machines as $machine) {
                 foreach (array_keys($sites) as $site) {
-                    $node = array(
+                    $node = [
                         'nodename' => sprintf('%s_%s_%s', $environment->getName(), $site, $machine['name']),
                         'hostname' => sprintf(
                             '%s.%s.%s.%s',
@@ -54,13 +51,13 @@ class PlatformRundeckResourcesCommand extends Command
                             $input->getOption('host-suffix')
                         ),
                         'username' => $site,
-                        'tags' => [
+                        'tags'     => [
                             'platform='.$platform->getName(),
                             'environment='.$environment->getName(),
                             'site='.$site,
-                            'machine='.$machine['name']
-                        ]
-                    );
+                            'machine='.$machine['name'],
+                        ],
+                    ];
                     $nodes[$node['nodename']] = $node;
                 }
             }
