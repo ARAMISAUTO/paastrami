@@ -210,7 +210,9 @@ class Environment
         // Add environment data
         $data['environment'] = $this->name;
         $data['platform'] = $this->platform->getName();
-        $data['sites'] = '"'.implode('","', array_keys($sites)).'"';
+        if ($sites) {
+            $data['sites'] = '"'.implode('","', array_keys($sites)).'"';
+        }
 
         return $data;
     }
